@@ -119,6 +119,10 @@ app.put('/videos/:id', (req:Request, res:Response) => {
         availableResolutions= []
     }
 
+    if(errors.errorsMessages.length) {
+        res.status(400).send(errors.errorsMessages)
+    }
+
     const id = +req.params.id
     let video = videos.find((v):boolean => v.id === id)
 
