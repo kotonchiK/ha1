@@ -62,21 +62,21 @@ app.put('/videos/:id', (req:Request, res:Response) => {
     let publicationDate = req.body.publicationDate
     let availableResolutions = req.body.availableResolutions
 
-    if(!title || title !== null ||typeof(title) !== "string" || !title.trim() || title.length > 40 ) {
+    if(!title || typeof(title) !== "string" || !title.trim() || title.length > 40 ) {
         errors.errorsMessages.push(
             {
                 message:"Incorrect title",
                 field:"title"
             })
     }
-    if(!author || title !== null || typeof(author) !== "string" ||!author.trim() || author.length > 20) {
+    if(!author || typeof(author) !== "string" ||!author.trim() || author.length > 20) {
         errors.errorsMessages.push(
             {
                 message:"Incorrect author",
                 field:"title"
             })
     }
-    if(typeof(canBeDownloaded) !== "boolean") {
+    if(!canBeDownloaded || typeof(canBeDownloaded) !== "boolean") {
         errors.errorsMessages.push(
             {
                 message:"Incorrect canBeDownloaded",
@@ -106,17 +106,17 @@ app.put('/videos/:id', (req:Request, res:Response) => {
     if(availableResolutions && Array.isArray(availableResolutions)) {
         availableResolutions.forEach((r) => {
             !AvailableResolutions.includes(r) &&
-                errors.errorsMessages.push(
-                    {
-                        message: "Incorrect availableResolutions",
-                        field: "availableResolutions"
-                    }
-                )
+            errors.errorsMessages.push(
+                {
+                    message: "Incorrect availableResolutions",
+                    field: "availableResolutions"
+                }
+            )
         })
     }
     else
     {
-availableResolutions= []
+        availableResolutions= []
     }
 
     const id = +req.params.id
@@ -128,8 +128,8 @@ availableResolutions= []
         video.canBeDownloaded = req.body.canBeDownloaded
         video.minAgeRestriction = req.body.minAgeRestriction
         video.publicationDate = req.body.publicationDate
-    video.availableResolutions = req.body.availableResolutions
-        res.status(204).send(video)
+        video.availableResolutions = req.body.availableResolutions
+        res.status(200).send(video)
     } else {
         res.sendStatus(404)
     }
@@ -151,7 +151,7 @@ app.post('/videos', (req:Request, res:Response) => {
         errors.errorsMessages.push(
             {
                 message:"Invalid author",
-                field:"author"
+                field:"title"
             })
     }
     if(availableResolutions && Array.isArray(availableResolutions)) {
