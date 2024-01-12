@@ -1,6 +1,7 @@
 import {Request, Response, Router} from "express";
 import {AvailableResolutions, ErrorType, VideoDbType} from "../types";
-import  {videos} from "../settings";
+import {videos} from "../settings";
+import {videosRepository} from "../repositories/videos-repository";
 
 export const videosRouter = Router({});
 
@@ -9,9 +10,7 @@ videosRouter.get('/', (req:Request, res:Response) => {
 })
 
 videosRouter.get('/:id',(req:Request, res:Response) => {
-    const id:number = +req.params.id
-    const video:VideoDbType|undefined = videos.find(v => v.id === id)
-
+    let video = videosRepository.getVideoById(+req.params.id)
     if(!video) {
         res.sendStatus(404)
         return
@@ -23,13 +22,13 @@ videosRouter.get('/:id',(req:Request, res:Response) => {
 
 videosRouter.delete('/:id', (req:Request, res:Response) => {
     for(let i:number = 0; i < videos.length; i++) {
-        if(videos[i].id === +req.params.id) {
-            videos.splice(i, 1)
+        const isDeleted:boolean = videosRepository.deleteVideoById(+req.params.id)
+        if(isDeleted) {
             res.sendStatus(204)
-            return
+        } else {
+            res.sendStatus(404)
         }
     }
-    res.sendStatus(404)
 })
 
 videosRouter.put('/:id', (req:Request, res:Response) => {
@@ -109,8 +108,7 @@ videosRouter.put('/:id', (req:Request, res:Response) => {
         res.status(400).send(errors)
     }
 
-    const id = +req.params.id
-    let video = videos.find((v):boolean => v.id === id)
+    let video = videosRepository.getVideoById(+req.params.id)
 
     if(video) {
         video.title = req.body.title
@@ -126,7 +124,7 @@ videosRouter.put('/:id', (req:Request, res:Response) => {
 })
 
 videosRouter.post('/', (req:Request, res:Response) => {
-    let {title, author, availableResolutions} = req.body
+    let {title, author, availableResolutions, minAgeRestriction, canBeDownloaded} = req.body
     let errors: ErrorType = {
         errorsMessages: []
     }
@@ -164,23 +162,7 @@ videosRouter.post('/', (req:Request, res:Response) => {
         return;
     }
 
-    const createdAt= new Date();
-    const publicationDate= new Date();
-
-    publicationDate.setDate(createdAt.getDate() + 1)
-
-    const newVideo: VideoDbType = {
-        id: +(new Date()),
-        title,
-        author,
-        canBeDownloaded:false,
-        minAgeRestriction:null,
-        createdAt: createdAt.toISOString(),
-        publicationDate: publicationDate.toISOString(),
-        availableResolutions
-    }
-    videos.push(newVideo);
-
+    const newVideo = videosRepository.createVideo(title, author, availableResolutions,canBeDownloaded,minAgeRestriction )
     res.status(201).send(newVideo);
 });
 
