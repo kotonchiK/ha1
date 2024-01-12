@@ -73,7 +73,7 @@ app.put('/videos/:id', (req:Request, res:Response) => {
         errors.errorsMessages.push(
             {
                 message:"Incorrect author",
-                field:"title"
+                field:"author"
             })
     }
     if(!canBeDownloaded || typeof(canBeDownloaded) !== "boolean") {
