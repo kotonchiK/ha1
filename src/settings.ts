@@ -62,14 +62,14 @@ app.put('/videos/:id', (req:Request, res:Response) => {
     let publicationDate = req.body.publicationDate
     let availableResolutions = req.body.availableResolutions
 
-    if(!title || typeof(title) !== "string" || !title.trim() || title.length > 40 ) {
+    if(!title || title === null || typeof(title) !== "string" || !title.trim() || title.length > 40 ) {
         errors.errorsMessages.push(
             {
                 message:"Incorrect title",
                 field:"title"
             })
     }
-    if(!author || typeof(author) !== "string" ||!author.trim() || author.length > 20) {
+    if(!author || author === null || typeof(author) !== "string" ||!author.trim() || author.length > 20) {
         errors.errorsMessages.push(
             {
                 message:"Incorrect author",
