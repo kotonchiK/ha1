@@ -120,7 +120,7 @@ app.put('/videos/:id', (req:Request, res:Response) => {
     }
 
     if(errors.errorsMessages.length) {
-        res.status(400).send(errors.errorsMessages)
+        res.status(400).send(errors)
     }
 
     const id = +req.params.id
