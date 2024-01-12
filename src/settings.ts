@@ -129,7 +129,7 @@ app.put('/videos/:id', (req:Request, res:Response) => {
         video.minAgeRestriction = req.body.minAgeRestriction
         video.publicationDate = req.body.publicationDate
         video.availableResolutions = req.body.availableResolutions
-        res.status(200).send(video)
+        res.status(204).send(video)
     } else {
         res.sendStatus(404)
     }
@@ -140,18 +140,18 @@ app.post('/videos', (req:Request, res:Response) => {
     let errors: ErrorType = {
         errorsMessages: []
     }
-    if(!title || !title.trim() || title.trim().length > 40 ) {
+    if(!title || !title.trim() || title.trim().length > 40 || title === null ) {
         errors.errorsMessages.push(
             {
                 message:"Invalid title",
                 field:"title"
             })
     }
-    if(!author || !author.trim().length || author.trim().length > 20) {
+    if(!author || !author.trim().length || author.trim().length > 20 || author === null) {
         errors.errorsMessages.push(
             {
                 message:"Invalid author",
-                field:"title"
+                field:"author"
             })
     }
     if(availableResolutions && Array.isArray(availableResolutions)) {
