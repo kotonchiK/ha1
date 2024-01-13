@@ -7,14 +7,14 @@ app.use(express.json())
 
 
 export let blogs: blogType[] = [{
-    id: 4,
+    id: 'id',
     name: 'name',
     description: 'description',
     websiteUrl: "websiteUrl"
 }]
 
 export let posts: postType[] = [{
-    id: 1,
+    id: 'id',
     title: 'title',
     shortDescription: 'string',
     content: 'string',
