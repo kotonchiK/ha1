@@ -14,7 +14,7 @@ postsRouter.get('/',(req, res) => {
 })
 
 postsRouter.get('/:id',(req:Request, res:Response) => {
-    const id:number = +req.params.id
+    const id = req.params.id
     const post:postType|undefined = posts.find(b => b.id === id)
 
     if(!post) {
@@ -28,7 +28,7 @@ postsRouter.get('/:id',(req:Request, res:Response) => {
 
 postsRouter.delete('/:id', authMiddleware, (req:Request, res:Response) => {
     for(let i:number = 0; i < posts.length; i++) {
-        if(posts[i].id === +req.params.id) {
+        if(posts[i].id === req.params.id) {
             posts.splice(i, 1)
             res.sendStatus(204)
             return
@@ -39,11 +39,11 @@ postsRouter.delete('/:id', authMiddleware, (req:Request, res:Response) => {
 
 postsRouter.post('/', authMiddleware, postValidation(), (req:Request, res:Response) => {
 
-    const {title, shortDescription, content, blogId, blogName} = req.body
+    const {id, title, shortDescription, content, blogId, blogName} = req.body
 
 
     const newPost = {
-        id:+(new Date()),
+        id,
         title,
         shortDescription,
         content,
@@ -66,7 +66,7 @@ postsRouter.put('/:id',authMiddleware, postValidation(), (req:Request, res:Respo
     let blogId = req.body.blogId
     let blogName = req.body.blogName
 
-    let post = posts.find((b):boolean => b.id === +req.params.id)
+    let post = posts.find((b):boolean => b.id === req.params.id)
 
     if(post) {
         post.title = title

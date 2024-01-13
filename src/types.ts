@@ -39,14 +39,14 @@ export type ErrorType = {
 }
 
 export type blogType = {
-    id: number
+    id: string
     name: string
     description: string
     websiteUrl: string
 }
 
 export type postType = {
-    id: number
+    id: string
     title: string
     shortDescription: string
     content: string

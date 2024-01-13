@@ -16,7 +16,7 @@ blogsRouter.get('/',(req, res) => {
 })
 
 blogsRouter.get('/:id',(req:Request, res:Response) => {
-    const id:number = +req.params.id
+    const id = req.params.id
     const blog:blogType|undefined = blogs.find(b => b.id === id)
 
     if(!blog) {
@@ -30,7 +30,7 @@ blogsRouter.get('/:id',(req:Request, res:Response) => {
 
 blogsRouter.delete('/:id', authMiddleware, (req:Request, res:Response) => {
     for(let i:number = 0; i < blogs.length; i++) {
-        if(blogs[i].id === +req.params.id) {
+        if(blogs[i].id === req.params.id) {
             blogs.splice(i, 1)
             res.sendStatus(204)
             return
@@ -41,10 +41,14 @@ blogsRouter.delete('/:id', authMiddleware, (req:Request, res:Response) => {
 
 blogsRouter.post('/', authMiddleware, blogValidation(), (req:Request, res:Response) => {
 
-    const {name, description, websiteUrl} = req.body
+    const id = req.body.id
+    const name = req.body.name
+    const description = req.body.description
+    const websiteUrl = req.body.websiteUrl
+
 
     const newBlog = {
-        id:+(new Date()),
+        id,
         name,
         description,
         websiteUrl
@@ -64,7 +68,7 @@ blogsRouter.put('/:id',authMiddleware, blogValidation(), (req:Request, res:Respo
     let description = req.body.description
     let websiteUrl = req.body.websiteUrl
 
-    let blog = blogs.find((b):boolean => b.id === +req.params.id)
+    let blog = blogs.find((b):boolean => b.id === req.params.id)
 
     if(blog) {
         blog.name = name
