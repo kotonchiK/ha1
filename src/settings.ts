@@ -1,9 +1,26 @@
 import express, {Express, Request, Response} from "express"
-import {VideoDbType,ErrorType, AvailableResolutions} from "./types";
+import {VideoDbType, ErrorType, AvailableResolutions, blogType, postType} from "./types";
 
 
 export const app:Express = express()
 app.use(express.json())
+
+
+export let blogs: blogType[] = [{
+    id: 4,
+    name: 'name',
+    description: 'description',
+    websiteUrl: "websiteUrl"
+}]
+
+export let posts: postType[] = [{
+    id: 1,
+    title: 'title',
+    shortDescription: 'string',
+    content: 'string',
+    blogId: 'blogId',
+    blogName: 'blogName'
+}]
 
 export let videos: VideoDbType[] = [{
     id:1,
@@ -16,7 +33,6 @@ export let videos: VideoDbType[] = [{
     availableResolutions:['P144']
 
 }]
-
 app.delete('/testing/all-data', (req:Request, res:Response) => {
     try {
         videos = []

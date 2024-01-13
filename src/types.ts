@@ -37,3 +37,19 @@ export type ErrorMessageType = {
 export type ErrorType = {
     errorsMessages: ErrorMessageType[]
 }
+
+export type blogType = {
+    id: number
+    name: string
+    description: string
+    websiteUrl: string
+}
+
+export type postType = {
+    id: number
+    title: string
+    shortDescription: string
+    content: string
+    blogId: string
+    blogName: string
+}
