@@ -1,24 +1,19 @@
 import {Router, Response, Request} from "express";
 import {authMiddleware} from "../middleware/auth/auth-middleware";
 import {blogValidation} from "../validators/blog-validator";
-import {blogRepository} from "../repositories/blog-repository";
 import {blogs} from "../settings";
-import { blogType } from "../types";
+import {blogType} from "../types";
 
 
 export const blogsRouter = Router({})
 
 blogsRouter.get('/',(req, res) => {
-
-    const blogs = blogRepository.getAll()
     res.status(200).send(blogs)
-
 })
 
 blogsRouter.get('/:id',(req:Request, res:Response) => {
     const id = +req.params.id
-    const blog:blogType|undefined = blogs.find(b => +(b.id) === id)
-
+    const blog:blogType|undefined = blogs.find(b => +b.id === id)
     if(!blog) {
         res.sendStatus(404)
         return
