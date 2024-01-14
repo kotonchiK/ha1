@@ -4,11 +4,12 @@ import {blogValidation} from "../validator/blog-validator";
 import {db} from "../../db/db";
 import {BlogsType} from "../../db/types/blogs.types";
 import {QueryBlogsModule} from "../models/QueryBlogsModule";
-import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../../types";
+import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "../../types";
 import {BlogRepository} from "../repository/blog-repository";
 import {URIParamsBlogIdModel} from "../models/URIParamsBlogIdModel";
 import {BlogsViewModel} from "../models/BlogsViewModel";
 import {CreateBlogModel} from "../models/CreateBlogModel";
+import {UpdateBlogModule} from "../models/UpdateBlogModule";
 
 
 export const blogsRouter = Router({})
@@ -49,7 +50,7 @@ blogsRouter.post('/', authMiddleware, blogValidation(), (req:RequestWithBody<Cre
     res.status(201).send(newBlog)
 })
 
-blogsRouter.put('/:id',authMiddleware, blogValidation(), (req:Request, res:Response) => {
+blogsRouter.put('/:id',authMiddleware, blogValidation(), (req:RequestWithParamsAndBody<URIParamsBlogIdModel, UpdateBlogModule>, res:Response) => {
 
     const {name, description, websiteUrl} = req.body
     const id = req.params.id
