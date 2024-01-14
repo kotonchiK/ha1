@@ -1,5 +1,4 @@
 import {db} from "../../db/db";
-import {BlogsType} from "../../db/types/blogs.types";
 
 
 export class BlogRepository {

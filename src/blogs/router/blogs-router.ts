@@ -1,8 +1,6 @@
 import {Router, Response, Request} from "express";
 import {authMiddleware} from "../../middleware/auth/auth-middleware";
 import {blogValidation} from "../validator/blog-validator";
-import {db} from "../../db/db";
-import {BlogsType} from "../../db/types/blogs.types";
 import {QueryBlogsModule} from "../models/QueryBlogsModule";
 import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "../../types";
 import {BlogRepository} from "../repository/blog-repository";
@@ -52,8 +50,9 @@ blogsRouter.post('/', authMiddleware, blogValidation(), (req:RequestWithBody<Cre
 
 blogsRouter.put('/:id',authMiddleware, blogValidation(), (req:RequestWithParamsAndBody<URIParamsBlogIdModel, UpdateBlogModule>, res:Response) => {
 
-    const {name, description, websiteUrl} = req.body
     const id = req.params.id
+
+    const {name, description, websiteUrl} = req.body
 
     const updateBlog = BlogRepository.updateBlog(id, name, description, websiteUrl)
 
@@ -61,7 +60,6 @@ blogsRouter.put('/:id',authMiddleware, blogValidation(), (req:RequestWithParamsA
         res.sendStatus(404)
         return
     }
-    const blog = BlogRepository.deleteById(id)
-    res.status(204).send(blog)
+    res.sendStatus(204)
 })
 

@@ -1,82 +1,66 @@
 import {Request, Response, Router} from "express";
 import {authMiddleware} from "../../middleware/auth/auth-middleware";
-import {postRepository} from "../repository/post-repository";
+import {PostRepository} from "../repository/post-repository";
 import {postValidation} from "../validator/post-validator";
-import {PostType} from "../../db/types/posts.types";
 import {db} from "../../db/db";
+import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "../../types";
+import {QueryPostsModule} from "../models/QueryPostsModule";
+import {URIParamsPostIdModel} from "../models/URIParamsPostIdModel";
+import {PostsViewModel} from "../models/PostsViewModel";
+import {CreatePostModel} from "../models/CreateBlogModel";
+import {UpdatePostModule} from "../models/UpdatePostModule";
 
 export const postsRouter = Router({})
-postsRouter.get('/',(req, res) => {
-
-    const posts = postRepository.getAll()
-    res.status(200).send(posts)
+postsRouter.get('/',(req:RequestWithQuery<QueryPostsModule>, res:Response) => {
+    const posts = PostRepository.getAll()
+    res.send(posts)
 
 })
 
-postsRouter.get('/:id',(req:Request, res:Response) => {
-    const id = req.params.id
-    const post:PostType|undefined = db.posts.find(b => b.id === id)
+postsRouter.get('/:id',(req:RequestWithParams<URIParamsPostIdModel>, res:Response<PostsViewModel>) => {
+    const post= PostRepository.getById(req.params.id)
 
     if(!post) {
         res.sendStatus(404)
         return
     } else
     {
-        res.status(200).send(post)
+        res.send(post)
     }
 })
 
 postsRouter.delete('/:id', authMiddleware, (req:Request, res:Response) => {
-    for(let i:number = 0; i < db.posts.length; i++) {
-        if(db.posts[i].id === req.params.id) {
-            db.posts.splice(i, 1)
-            res.sendStatus(204)
-            return
-        }
+   const deletePost = PostRepository.deleteById(req.params.id)
+    if(!deletePost) {
+        res.sendStatus(404)
+        return
     }
-    res.sendStatus(404)
+    res.sendStatus(204)
 })
 
-postsRouter.post('/', authMiddleware, postValidation(), (req:Request, res:Response) => {
+postsRouter.post('/', authMiddleware, postValidation(), (req:RequestWithBody<CreatePostModel>, res:Response) => {
 
-    const {id, title, shortDescription, content, blogId, blogName} = req.body
+    const {title, shortDescription, content, blogId, blogName} = req.body
 
-
-    const newPost = {
-        id,
-        title,
-        shortDescription,
-        content,
-        blogId,
-        blogName
-    }
+    const newPost = PostRepository.createPost(title, shortDescription, content, blogId, blogName)
     db.posts.push(newPost)
     res.status(201).send(newPost)
 })
 
-postsRouter.put('/:id',authMiddleware, postValidation(), (req:Request, res:Response) => {
-    // if(Object.keys(req.body).length === 0 && req.body.constructor === Object) {
-    //     res.sendStatus(400)
-    //     return
-    // }
+postsRouter.put('/:id',authMiddleware, postValidation(), (req:RequestWithParamsAndBody<URIParamsPostIdModel, UpdatePostModule>, res:Response) => {
 
-    let title = req.body.title
-    let shortDescription = req.body.shortDescription
-    let content = req.body.content
-    let blogId = req.body.blogId
-    let blogName = req.body.blogName
+    const id = req.params.id
+    const {title, shortDescription, content, blogId, blogName} = req.body
 
-    let post = db.posts.find((b):boolean => b.id === req.params.id)
+    const updatePost = PostRepository.updatePost(id, title, shortDescription, content, blogId, blogName)
 
-    if(post) {
-        post.title = title
-        post.shortDescription = shortDescription
-        post.content = content
-        post.blogId = blogId
-        post.blogName = blogName
-        res.status(204).send(post)
-    } else {
+    if(!updatePost) {
         res.sendStatus(404)
+        return
+
     }
+    res.sendStatus(204)
+
+
 })
 
