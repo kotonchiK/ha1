@@ -1,16 +1,16 @@
 import {Request, Response, Router} from "express";
-import {AvailableResolutions, ErrorType, VideoDbType} from "../../types";
-import  {videos} from "../../settings";
+import {db, ErrorType} from "../../db/db";
+import {AvailableResolutions, VideoType} from "../../db/types/videos.types";
 
 export const videosRouter = Router({});
 
 videosRouter.get('/', (req:Request, res:Response) => {
-    res.status(200).send(videos)
+    res.status(200).send(db.videos)
 })
 
 videosRouter.get('/:id',(req:Request, res:Response) => {
     const id:number = +req.params.id
-    const video:VideoDbType|undefined = videos.find(v => v.id === id)
+    const video:VideoType|undefined = db.videos.find(v => v.id === id)
 
     if(!video) {
         res.sendStatus(404)
@@ -22,9 +22,9 @@ videosRouter.get('/:id',(req:Request, res:Response) => {
 })
 
 videosRouter.delete('/:id', (req:Request, res:Response) => {
-    for(let i:number = 0; i < videos.length; i++) {
-        if(videos[i].id === +req.params.id) {
-            videos.splice(i, 1)
+    for(let i:number = 0; i < db.videos.length; i++) {
+        if(db.videos[i].id === +req.params.id) {
+            db.videos.splice(i, 1)
             res.sendStatus(204)
             return
         }
@@ -110,7 +110,7 @@ videosRouter.put('/:id', (req:Request, res:Response) => {
     }
 
     const id = +req.params.id
-    let video = videos.find((v):boolean => v.id === id)
+    let video = db.videos.find((v):boolean => v.id === id)
 
     if(video) {
         video.title = req.body.title
@@ -169,7 +169,7 @@ videosRouter.post('/', (req:Request, res:Response) => {
 
     publicationDate.setDate(createdAt.getDate() + 1)
 
-    const newVideo: VideoDbType = {
+    const newVideo: VideoType = {
         id: +(new Date()),
         title,
         author,
@@ -179,7 +179,7 @@ videosRouter.post('/', (req:Request, res:Response) => {
         publicationDate: publicationDate.toISOString(),
         availableResolutions
     }
-    videos.push(newVideo);
+    db.videos.push(newVideo);
 
     res.status(201).send(newVideo);
 });

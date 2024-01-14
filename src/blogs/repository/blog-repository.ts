@@ -24,7 +24,7 @@ export class BlogRepository {
         return newBlog
     }
     static updateBlog(id:string, name:string, description:string, websiteUrl:string) {
-        let foundBlog:BlogsType|undefined = db.blogs.find(b => b.id === id)
+        let foundBlog = db.blogs.find(b => b.id === id)
         if(foundBlog) {
             foundBlog.name = name;
             foundBlog.description = description;

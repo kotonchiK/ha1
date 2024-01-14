@@ -59,6 +59,7 @@ blogsRouter.put('/:id',authMiddleware, blogValidation(), (req:Request, res:Respo
         res.sendStatus(404)
         return
     }
-    res.sendStatus(204)
+    const blog = BlogRepository.deleteById(id)
+    res.status(204).send(blog)
 })
 
