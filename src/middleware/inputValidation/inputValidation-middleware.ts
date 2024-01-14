@@ -5,15 +5,19 @@ export const inputValidationMiddleware = (req:Request, res:Response, next:NextFu
     const formattedError = validationResult(req).formatWith((error:ValidationError ) => ({
         message: error.msg,
         field: error.type === 'field' ? error.path: 'unknown'
+
     }))
 
     if(!formattedError.isEmpty()) {
-        const errorsMessages = formattedError.array({onlyFirstError:true})
+        const errorMessage = formattedError.array({onlyFirstError:true})
 
-        res.send(400).send({errorsMessages: errorsMessages})
+        const errors = {
+            errorMessages: errorMessage
+
+        }
+        res.status(400).send(errors)
         return
     }
-
-    return next();
+    next();
 
 }

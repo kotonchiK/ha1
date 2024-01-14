@@ -33,3 +33,14 @@ export let db:DbType = {
         blogName: 'blogName'}
     ]
 }
+
+
+export type ErrorMessageType = {
+    field:string
+    message:string
+}
+
+export type ErrorType = {
+    errorsMessages: ErrorMessageType[]
+}
+
