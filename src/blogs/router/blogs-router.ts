@@ -17,7 +17,7 @@ blogsRouter.get('/',(req:RequestWithQuery<QueryBlogsModule>, res:Response) => {
     res.send(blogs)
 })
 
-blogsRouter.get('/:id',(req:RequestWithParams<URIParamsBlogIdModel>, res:Response<BlogsViewModel>) => {
+blogsRouter.get('/:id',(req:RequestWithParams<URIParamsBlogIdModel>, res:Response) => {
     const id = req.params.id
     const blog = BlogRepository.getById(id)
     if(!blog) {

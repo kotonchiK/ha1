@@ -25,12 +25,14 @@ export let db:DbType = {
         websiteUrl: "https://badsite.com"}
     ],
     posts:[
-        {id: 'id',
-        title: 'title',
-        shortDescription: 'string',
-        content: 'string',
-        blogId: 'blogId',
-        blogName: 'blogName'}
+        {
+            id: 'id',
+            title: 'title',
+            shortDescription: 'shortDescription',
+            content: 'content',
+            blogId: 'blogId',
+            blogName: 'blogId',
+        }
     ]
 }
 
