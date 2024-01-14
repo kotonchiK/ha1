@@ -9,6 +9,7 @@ import {PostsViewModel} from "../models/PostsViewModel";
 import {CreatePostModel} from "../models/CreatePostModel";
 import {UpdatePostModule} from "../models/UpdatePostModule";
 import {URIParamsBlogIdModel} from "../../blogs/models/URIParamsBlogIdModel";
+import {BlogRepository} from "../../blogs/repository/blog-repository";
 
 
 export const postsRouter = Router({})
@@ -29,8 +30,9 @@ postsRouter.get('/:id',(req:RequestWithParams<URIParamsBlogIdModel>, res:Respons
 
 postsRouter.post('/', authMiddleware, postValidation(), (req:RequestWithBody<CreatePostModel>, res:Response) => {
 
-    const {title, shortDescription, content, blogId, blogName} = req.body
-
+    const {title, shortDescription, content,blogId} = req.body
+    const blog = BlogRepository.getById(blogId)
+    const blogName = blog!.name
     const newPost = PostRepository.createPost(title, shortDescription, content, blogId, blogName)
     res.status(201).send(newPost)
 })
@@ -38,8 +40,9 @@ postsRouter.post('/', authMiddleware, postValidation(), (req:RequestWithBody<Cre
 postsRouter.put('/:id',authMiddleware, postValidation(), (req:RequestWithParamsAndBody<URIParamsPostIdModel, UpdatePostModule>, res:Response) => {
 
     const id = req.params.id
-    const {title, shortDescription, content, blogId, blogName} = req.body
-
+    const {title, shortDescription, content, blogId} = req.body
+    const blog = BlogRepository.getById(blogId)
+    const blogName = blog!.name
     const updatePost = PostRepository.updatePost(id, title, shortDescription, content, blogId, blogName)
 
     if(!updatePost) {
