@@ -1,9 +1,9 @@
 import {Request, Response, Router} from "express";
-import {postType} from "../types";
-import {posts} from "../settings";
-import {authMiddleware} from "../middleware/auth/auth-middleware";
-import {postRepository} from "../repositories/post-repository";
-import {postValidation} from "../validators/post-validator";
+import {postType} from "../../types";
+import {posts} from "../../settings";
+import {authMiddleware} from "../../middleware/auth/auth-middleware";
+import {postRepository} from "../repository/post-repository";
+import {postValidation} from "../validator/post-validator";
 
 export const postsRouter = Router({})
 postsRouter.get('/',(req, res) => {

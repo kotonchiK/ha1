@@ -1,4 +1,4 @@
-import {posts} from "../settings";
+import {posts} from "../../settings";
 
 export class postRepository {
 
@@ -7,7 +7,7 @@ export class postRepository {
     }
 
     static getById(id: number) {
-        const postFind = posts.find(b => b.id === id)
+        const postFind = posts.find(b => +b.id === id)
         return postFind
     }
 

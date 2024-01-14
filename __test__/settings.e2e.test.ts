@@ -1,7 +1,21 @@
 import {app} from "../src/settings";
-import {VideoDbType} from "../src/types";
+import {blogType, VideoDbType} from "../src/types";
 import request from 'supertest'
+import {videosRouter} from "../src/videos/router/videos-router";
+
+describe('/Blogs API Test', () => {
+
+    let blog: blogType[] = [
+
+    ]
+
+
+})
 describe('/Videos API Tests', () => {
+
+
+
+
 
     let video: VideoDbType[] = [
         {

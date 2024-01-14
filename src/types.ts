@@ -1,33 +1,16 @@
 import {Request} from "express";
 
-export const AvailableResolutions = [
-    'P144',
-'P240',
-'P360',
-'P480',
-'P720',
-'P1080',
-'P1440',
-'P2160']
 
-export type VideoDbType = {
-    id:number
-    title:string
-    author:string
-    canBeDownloaded: boolean
-    minAgeRestriction: number | null
-    createdAt:string
-    publicationDate:string
-    availableResolutions:typeof AvailableResolutions
-}
 
 export type RequestWithBody<B> = Request<{}, {}, B, {}>;
 
-export type CreateVideoType = {
-    title:string
-    author:string
-    availableResolutions:typeof AvailableResolutions
-}
+export type RequestWithQuery<P> = Request<{},{},{}, P>
+
+export type RequestWithParams<P> = Request<P>
+
+export type RequestWithParamsAndBody<P, B> = Request<P, {}, B>
+
+
 
 export type ErrorMessageType = {
     field:string
@@ -38,18 +21,6 @@ export type ErrorType = {
     errorsMessages: ErrorMessageType[]
 }
 
-export type blogType = {
-    id: string
-    name: string
-    description: string
-    websiteUrl: string
-}
 
-export type postType = {
-    id: string
-    title: string
-    shortDescription: string
-    content: string
-    blogId: string
-    blogName: string
-}
+
+

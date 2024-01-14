@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
-import {AvailableResolutions, ErrorType, VideoDbType} from "../types";
-import  {videos} from "../settings";
+import {AvailableResolutions, ErrorType, VideoDbType} from "../../types";
+import  {videos} from "../../settings";
 
 export const videosRouter = Router({});
 

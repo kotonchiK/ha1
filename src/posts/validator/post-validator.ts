@@ -1,6 +1,6 @@
 import {body} from "express-validator";
-import {blogRepository} from "../repositories/blog-repository";
-import {inputValidationMiddleware} from "../middleware/inputValidation/inputValidation-middleware";
+import {blogRepository} from "../../blogs/repository/blog-repository";
+import {inputValidationMiddleware} from "../../middleware/inputValidation/inputValidation-middleware";
 
 const titleValidator = body('title').isString().trim().isLength({min:1, max: 30}).withMessage('Incorrect title')
 

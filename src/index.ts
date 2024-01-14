@@ -1,8 +1,9 @@
 import { app } from './settings'
-import {videosRouter} from "./routers/videos-router";
-import {blogsRouter} from "./routers/blogs-router";
+import {videosRouter} from "./videos/router/videos-router";
+import {blogsRouter} from "./blogs/router/blogs-router";
 
 const port = process.env.PORT || 3999
+
 
 app.use('/videos', videosRouter)
 
