@@ -23,19 +23,8 @@ postsRouter.get('/:id',(req:RequestWithParams<URIParamsPostIdModel>, res:Respons
     if(!post) {
         res.sendStatus(404)
         return
-    } else
-    {
-        res.send(post)
     }
-})
-
-postsRouter.delete('/:id', authMiddleware, (req:Request, res:Response) => {
-   const deletePost = PostRepository.deleteById(req.params.id)
-    if(!deletePost) {
-        res.sendStatus(404)
-        return
-    }
-    res.sendStatus(204)
+    res.send(post)
 })
 
 postsRouter.post('/', authMiddleware, postValidation(), (req:RequestWithBody<CreatePostModel>, res:Response) => {
@@ -43,7 +32,6 @@ postsRouter.post('/', authMiddleware, postValidation(), (req:RequestWithBody<Cre
     const {title, shortDescription, content, blogId, blogName} = req.body
 
     const newPost = PostRepository.createPost(title, shortDescription, content, blogId, blogName)
-    db.posts.push(newPost)
     res.status(201).send(newPost)
 })
 
@@ -61,6 +49,13 @@ postsRouter.put('/:id',authMiddleware, postValidation(), (req:RequestWithParamsA
     }
     res.sendStatus(204)
 
-
 })
 
+postsRouter.delete('/:id', authMiddleware, (req:Request, res:Response) => {
+    const deletePost = PostRepository.deleteById(req.params.id)
+    if(!deletePost) {
+        res.sendStatus(404)
+        return
+    }
+    res.sendStatus(204)
+})

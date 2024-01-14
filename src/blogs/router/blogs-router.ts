@@ -29,16 +29,6 @@ blogsRouter.get('/:id',(req:RequestWithParams<URIParamsBlogIdModel>, res:Respons
     }
 })
 
-blogsRouter.delete('/:id', authMiddleware, (req:Request, res:Response) => {
-
-    const deleteBlog = BlogRepository.deleteById(req.params.id)
-    if(!deleteBlog) {
-        res.sendStatus(404)
-        return
-    }
-    res.sendStatus(204)
-})
-
 blogsRouter.post('/', authMiddleware, blogValidation(), (req:RequestWithBody<CreateBlogModel>, res:Response) => {
 
     const {name, description, websiteUrl} = req.body
@@ -63,3 +53,12 @@ blogsRouter.put('/:id',authMiddleware, blogValidation(), (req:RequestWithParamsA
     res.sendStatus(204)
 })
 
+blogsRouter.delete('/:id', authMiddleware, (req:Request, res:Response) => {
+
+    const deleteBlog = BlogRepository.deleteById(req.params.id)
+    if(!deleteBlog) {
+        res.sendStatus(404)
+        return
+    }
+    res.sendStatus(204)
+})
