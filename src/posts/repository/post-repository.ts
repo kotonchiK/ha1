@@ -6,8 +6,7 @@ export class PostRepository {
     }
 
     static getById(id: string) {
-        const foundPost = db.posts
-            .find(p => p.id === id)
+        const foundPost = db.posts.find(p => p.id === id)
         return foundPost
     }
 

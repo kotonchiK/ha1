@@ -10,16 +10,16 @@ import {PostsViewModel} from "../models/PostsViewModel";
 import {CreatePostModel} from "../models/CreateBlogModel";
 import {UpdatePostModule} from "../models/UpdatePostModule";
 
+
 export const postsRouter = Router({})
 postsRouter.get('/',(req:RequestWithQuery<QueryPostsModule>, res:Response) => {
     const posts = PostRepository.getAll()
     res.send(posts)
-
 })
 
 postsRouter.get('/:id',(req:RequestWithParams<URIParamsPostIdModel>, res:Response<PostsViewModel>) => {
-    const post= PostRepository.getById(req.params.id)
-
+    const id = req.params.id
+    const post = PostRepository.getById(id)
     if(!post) {
         res.sendStatus(404)
         return
