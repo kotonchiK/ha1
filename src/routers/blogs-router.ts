@@ -16,8 +16,8 @@ blogsRouter.get('/',(req, res) => {
 })
 
 blogsRouter.get('/:id',(req:Request, res:Response) => {
-    const id = req.params.id
-    const blog:blogType|undefined = blogs.find(b => b.id === id)
+    const id = +req.params.id
+    const blog:blogType|undefined = blogs.find(b => +(b.id) === id)
 
     if(!blog) {
         res.sendStatus(404)
@@ -30,7 +30,7 @@ blogsRouter.get('/:id',(req:Request, res:Response) => {
 
 blogsRouter.delete('/:id', authMiddleware, (req:Request, res:Response) => {
     for(let i:number = 0; i < blogs.length; i++) {
-        if(blogs[i].id === req.params.id) {
+        if(+(blogs[i].id) === +req.params.id) {
             blogs.splice(i, 1)
             res.sendStatus(204)
             return
@@ -68,7 +68,7 @@ blogsRouter.put('/:id',authMiddleware, blogValidation(), (req:Request, res:Respo
     let description = req.body.description
     let websiteUrl = req.body.websiteUrl
 
-    let blog = blogs.find((b):boolean => b.id === req.params.id)
+    let blog = blogs.find((b):boolean => +(b.id) === +req.params.id)
 
     if(blog) {
         blog.name = name
