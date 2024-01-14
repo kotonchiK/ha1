@@ -51,7 +51,8 @@ blogsRouter.post('/', authMiddleware, blogValidation(), (req:RequestWithBody<Cre
 
 blogsRouter.put('/:id',authMiddleware, blogValidation(), (req:Request, res:Response) => {
 
-    const {id, name, description, websiteUrl} = req.body
+    const {name, description, websiteUrl} = req.body
+    const id = req.params.id
 
     const updateBlog = BlogRepository.updateBlog(id, name, description, websiteUrl)
 
