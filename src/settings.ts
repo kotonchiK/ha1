@@ -7,19 +7,19 @@ app.use(express.json())
 
 
 export let blogs: blogType[] = [{
-    id: 'id',
-    name: 'name',
-    description: 'description',
-    websiteUrl: "websiteUrl"
+    "id": 'id',
+    "name": 'name',
+    "description": 'description',
+    "websiteUrl": "websiteUrl"
 }]
 
 export let posts: postType[] = [{
-    id: 'id',
-    title: 'title',
-    shortDescription: 'string',
-    content: 'string',
-    blogId: 'blogId',
-    blogName: 'blogName'
+    "id": 'id',
+    "title": 'title',
+    "shortDescription": 'string',
+    "content": 'string',
+    "blogId": 'blogId',
+    "blogName": 'blogName'
 }]
 
 export let videos: VideoDbType[] = [{
