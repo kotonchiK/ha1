@@ -13,7 +13,7 @@ export const inputValidationMiddleware = (req:Request, res:Response, next:NextFu
         const errorMessage = formattedError.array({onlyFirstError:true})
 
         const errors = {
-            errorMessages: errorMessage
+            errorsMessages: errorMessage
 
         }
         res.status(400).send(errors)
