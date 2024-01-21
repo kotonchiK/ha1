@@ -6,6 +6,7 @@ import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWit
 import {HTTP_STATUSES} from "../../../utils";
 import {CreatePostType, PostIdType, UpdatePostType, ViewPostType} from "../models/models";
 import {ObjectId} from "mongodb";
+import {body} from "express-validator";
 
 
 export const postsRouter = () => {
@@ -34,7 +35,7 @@ export const postsRouter = () => {
         }
     })
 
-    router.post('/', authMiddleware, postValidation(), async (req: RequestWithBody<CreatePostType>, res: Response) => {
+    router.post('/',authMiddleware, postValidation(), async (req: RequestWithBody<CreatePostType>, res: Response) => {
 
         const createData = {
             title:req.body.title,
@@ -80,7 +81,7 @@ export const postsRouter = () => {
 
     })
 
-    router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
+    router.delete('/:id',authMiddleware, async (req: Request, res: Response) => {
 
         const id = req.params.id
 

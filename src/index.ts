@@ -8,7 +8,6 @@ import {testRouter} from "./test/test-router";
 export const port= 3000
 export const app = express()
 
-
 app.listen(port, async () => {
 await runDb()
 })
