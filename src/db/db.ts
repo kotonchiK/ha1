@@ -1,48 +1,36 @@
-import {VideoType} from "./types/videos.types";
-import {PostType} from "./types/posts.types";
-import {BlogsType} from "./types/blogs.types";
+import dotenv from 'dotenv'
+import {MongoClient} from "mongodb";
+import {BlogDbType} from "../features/blogs/models/db/blog-db";
+import {PostDbType} from "../features/posts/models/db/post-db";
+dotenv.config()
 
-export type DbType = {
-    videos: VideoType[],
-    blogs: BlogsType[],
-    posts: PostType[]
-}
-export let db:DbType = {
-    videos:[
-        {id:1,
-    title:'test string',
-    author:'test author',
-    canBeDownloaded: true,
-    minAgeRestriction: null,
-    createdAt:"2023-12-04T21:42:23.8912",
-    publicationDate:'2023-12-84T21:42:2312',
-    availableResolutions:['P144']}
-    ],
-    blogs:[
-        {id: 'id',
-        name: 'name',
-        description: 'description',
-        websiteUrl: "https://badsite.com"}
-    ],
-    posts:[
-        {
-            id: 'id',
-            title: 'title',
-            shortDescription: 'shortDescription',
-            content: 'content',
-            blogId: 'blogId',
-            blogName: 'blogId',
-        }
-    ]
+export const port = process.env.PORT || 3999
+
+
+const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
+
+const client = new MongoClient(mongoURI)
+
+const database = client.db('blogs')
+
+export const blogsCollection = database.collection<BlogDbType>('blogs')
+export const postsCollection = database.collection<PostDbType>('posts')
+
+export const runDb = async () => {
+    try{
+
+        await client.connect()
+
+        await client.db("blogs-hws").command({ping:1})
+        console.log('Client connected to DB')
+        console.log(`Example app listening on port ${port}`)
+    } catch (e){
+        console.log(e)
+
+        await client.close()
+    }
 }
 
 
-export type ErrorMessageType = {
-    field:string
-    message:string
-}
-
-export type ErrorType = {
-    errorsMessages: ErrorMessageType[]
-}
-
+console.log(process.env.MONGO_URL)
+//output - mongodb+srv://a:a@ava.epzello.mongodb.net/?retryWrites=true&w=majority
