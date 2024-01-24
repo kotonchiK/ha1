@@ -9,17 +9,16 @@ import {ObjectId} from "mongodb";
 import {body} from "express-validator";
 
 
-export const postsRouter = () => {
-
-    const router = express.Router()
+export const postsRouter = Router({})
 
 
-    router.get('/', async (req: Request, res: Response) => {
+
+postsRouter.get('/', async (req: Request, res: Response) => {
         const posts = await PostRepository.getAll()
         res.send(posts)
     })
 
-    router.get('/:id', async (req: RequestWithParams<PostIdType>, res: Response<ViewPostType>) => {
+postsRouter.get('/:id', async (req: RequestWithParams<PostIdType>, res: Response<ViewPostType>) => {
         const id = req.params.id
 
         if(!ObjectId.isValid(id))
@@ -35,7 +34,7 @@ export const postsRouter = () => {
         }
     })
 
-    router.post('/',authMiddleware, postValidation(), async (req: RequestWithBody<CreatePostType>, res: Response) => {
+postsRouter.post('/',authMiddleware, postValidation(), async (req: RequestWithBody<CreatePostType>, res: Response) => {
 
         const createData = {
             title:req.body.title,
@@ -50,7 +49,7 @@ export const postsRouter = () => {
             .send(newPost)
     })
 
-    router.put('/:id', authMiddleware, postValidation(), async (req: RequestWithParamsAndBody<PostIdType, UpdatePostType>, res: Response) => {
+postsRouter.put('/:id', authMiddleware, postValidation(), async (req: RequestWithParamsAndBody<PostIdType, UpdatePostType>, res: Response) => {
 
         const id = req.params.id
         if(!ObjectId.isValid(id)){
@@ -81,7 +80,7 @@ export const postsRouter = () => {
 
     })
 
-    router.delete('/:id',authMiddleware, async (req: Request, res: Response) => {
+postsRouter.delete('/:id',authMiddleware, async (req: Request, res: Response) => {
 
         const id = req.params.id
 
@@ -97,5 +96,3 @@ export const postsRouter = () => {
         }
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     })
-    return router
-}

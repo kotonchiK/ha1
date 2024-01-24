@@ -7,16 +7,17 @@ import {BlogIdType, CreateBlogType, UpdateBlogType, OutputBlogType, ViewBlogType
 import {ObjectId} from "mongodb";
 import {HTTP_STATUSES} from "../../../utils";
 
-export const blogsRouter = () => {
+export const blogsRouter = Router({})
 
-    const router = express.Router()
 
-    router.get('/', async (req: Request, res: Response) => {
+
+
+blogsRouter.get('/', async (req: Request, res: Response) => {
         const blogs = await BlogRepository.getAll()
         res.send(blogs)
     })
 
-    router.get('/:id', async (req: RequestWithParams<BlogIdType>, res: Response<ViewBlogType>) => {
+blogsRouter.get('/:id', async (req: RequestWithParams<BlogIdType>, res: Response<ViewBlogType>) => {
         const id = req.params.id
 
         if(!ObjectId.isValid(id)){
@@ -32,7 +33,7 @@ export const blogsRouter = () => {
         }
     })
 
-    router.post('/', authMiddleware, blogValidation(), async (req: RequestWithBody<CreateBlogType>, res: Response) => {
+blogsRouter.post('/', authMiddleware, blogValidation(), async (req: RequestWithBody<CreateBlogType>, res: Response) => {
 
         const createData  = {
             name:req.body.name,
@@ -48,7 +49,7 @@ export const blogsRouter = () => {
 
     })
 
-    router.put('/:id', authMiddleware, blogValidation(), async (req: RequestWithParamsAndBody<BlogIdType, UpdateBlogType>, res: Response) => {
+blogsRouter.put('/:id', authMiddleware, blogValidation(), async (req: RequestWithParamsAndBody<BlogIdType, UpdateBlogType>, res: Response) => {
 
         const id = req.params.id
 
@@ -64,7 +65,6 @@ export const blogsRouter = () => {
         }
 
         const blog = await BlogRepository.getById(id)
-
         if (!blog) {
             res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
             return
@@ -80,7 +80,7 @@ export const blogsRouter = () => {
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     })
 
-    router.delete('/:id', authMiddleware, async (req: RequestWithParams<BlogIdType>, res: Response) => {
+blogsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<BlogIdType>, res: Response) => {
 
         const id = req.params.id
 
@@ -97,5 +97,3 @@ export const blogsRouter = () => {
         }
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     })
-    return router
-}

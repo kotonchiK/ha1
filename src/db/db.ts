@@ -6,12 +6,11 @@ dotenv.config()
 
 export const port = process.env.PORT || 3999
 
-
-const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
+const mongoURI = process.env.MONGO_URL || "mongodb+srv://Anton:Koton1@cluster0.kfcmxjx.mongodb.net/?retryWrites=true&w=majority"
 
 const client = new MongoClient(mongoURI)
 
-const database = client.db('blogs')
+export const database = client.db('blogs')
 
 export const blogsCollection = database.collection<BlogDbType>('blogs')
 export const postsCollection = database.collection<PostDbType>('posts')
@@ -30,7 +29,3 @@ export const runDb = async () => {
         await client.close()
     }
 }
-
-
-console.log(process.env.MONGO_URL)
-//output - mongodb+srv://a:a@ava.epzello.mongodb.net/?retryWrites=true&w=majority
