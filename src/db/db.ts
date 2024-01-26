@@ -1,31 +1,37 @@
 import dotenv from 'dotenv'
 import {MongoClient} from "mongodb";
-import {BlogDbType} from "../features/blogs/models/db/blog-db";
-import {PostDbType} from "../features/posts/models/db/post-db";
+import {BlogDb} from "../features/blogs/models/db/blog-db";
+import {PostDb} from "../features/posts/models/db/post-db";
 dotenv.config()
 
-export const port = process.env.PORT || 3999
+export const port = 80
 
-const mongoURI = process.env.MONGO_URL || "mongodb+srv://Anton:Koton1@cluster0.kfcmxjx.mongodb.net/?retryWrites=true&w=majority"
+const uri = process.env.MONGO_URL || "mongodb://localhost:27017"
 
-const client = new MongoClient(mongoURI)
+const client = new MongoClient(uri)
 
-export const database = client.db('blogs')
+export const database = client.db('blogs-db')
 
-export const blogsCollection = database.collection<BlogDbType>('blogs')
-export const postsCollection = database.collection<PostDbType>('posts')
+export const blogsCollection = database.collection<BlogDb>('blogs')
+export const postsCollection = database.collection<PostDb>('posts')
 
 export const runDb = async () => {
     try{
-
         await client.connect()
 
-        await client.db("blogs-hws").command({ping:1})
         console.log('Client connected to DB')
         console.log(`Example app listening on port ${port}`)
-    } catch (e){
+    } catch (e) {
         console.log(e)
 
         await client.close()
     }
 }
+
+
+
+
+
+
+
+

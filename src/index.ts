@@ -7,6 +7,7 @@ import {testRouter} from "./test/test-router";
 export const app = express()
 export const jsonBodyMiddleWare = express.json()
 
+
 app.use(jsonBodyMiddleWare)
 
 app.use('/blogs', blogsRouter)

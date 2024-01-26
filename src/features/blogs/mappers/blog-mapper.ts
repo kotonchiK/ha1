@@ -1,8 +1,8 @@
 import {WithId} from "mongodb";
 import {OutputBlogType} from "../models/models";
-import {BlogDbType} from "../models/db/blog-db";
+import {BlogDb} from "../models/db/blog-db";
 
-export const blogMapper = (blog:WithId<BlogDbType>):OutputBlogType => {
+export const blogMapper = (blog:WithId<BlogDb>):OutputBlogType => {
     return {
         id:blog._id.toString(),
         name:blog.name,
