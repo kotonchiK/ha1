@@ -1,9 +1,8 @@
-export type PostType = {
-    id:string
+export type PostDb = {
     title:string
     shortDescription:string
     content:string
+    createdAt:string
     blogId:string
     blogName:string
-    createdAt:string
 }

@@ -1,13 +1,11 @@
-import express, {Request, Response, Router} from "express";
-import {authMiddleware} from "../../../middlewares/auth/auth-middleware";
-import {PostRepository} from "../repositories/post-repository";
-import {postValidation} from "../validator/post-validator";
-import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "../../../types";
-import {HTTP_STATUSES} from "../../../utils";
+import {Request, Response, Router} from "express";
+import {authMiddleware} from "../middlewares/auth/auth-middleware";
+import {PostRepository} from "../repository/post-repository";
+import {postValidation} from "../middlewares/validators/post-validator";
+import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody} from "../types";
+import {HTTP_STATUSES} from "../utils";
 import {CreatePostType, PostIdType, UpdatePostType, ViewPostType} from "../models/models";
 import {ObjectId} from "mongodb";
-import {body} from "express-validator";
-
 
 export const postsRouter = Router({})
 
@@ -95,4 +93,4 @@ postsRouter.delete('/:id',authMiddleware, async (req: Request, res: Response) =>
             return
         }
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-    })
+})

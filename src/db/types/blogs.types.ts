@@ -1,8 +1,7 @@
-export type BlogsType = {
-    id:string
+export type BlogDb = {
     name:string
-    description:string,
+    description:string
     websiteUrl:string
-    createdAt:string,
+    createdAt:string
     isMembership:boolean
 }

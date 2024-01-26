@@ -1,7 +1,8 @@
 import dotenv from 'dotenv'
 import {MongoClient} from "mongodb";
-import {BlogDb} from "../features/blogs/models/db/blog-db";
-import {PostDb} from "../features/posts/models/db/post-db";
+import {BlogDb} from "./types/blogs.types";
+import {PostDb} from "./types/posts.types";
+
 dotenv.config()
 
 export const port = 80

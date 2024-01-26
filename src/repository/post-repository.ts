@@ -1,11 +1,8 @@
 import {CreatePostType, OutputPostType, UpdatePostType, ViewPostType} from "../models/models";
-import {blogsCollection, postsCollection} from "../../../db/db";
-import {postsRouter} from "../router/posts-router";
+import {postsCollection} from "../db/db";
 import {postMapper} from "../mappers/post-mapper";
-import {OutputBlogType, ViewBlogType} from "../../blogs/models/models";
 import {ObjectId} from "mongodb";
-import {blogMapper} from "../../blogs/mappers/blog-mapper";
-import {BlogRepository} from "../../blogs/repositories/blog-repository";
+import {BlogRepository} from "./blog-repository";
 
 export class PostRepository {
 

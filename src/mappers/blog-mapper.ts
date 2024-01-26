@@ -1,6 +1,6 @@
 import {WithId} from "mongodb";
-import {OutputBlogType} from "../models/models";
-import {BlogDb} from "../models/db/blog-db";
+import {OutputBlogType} from "../models/blogs.models";
+import {BlogDb} from "../db/types/blogs.types";
 
 export const blogMapper = (blog:WithId<BlogDb>):OutputBlogType => {
     return {
@@ -12,5 +12,3 @@ export const blogMapper = (blog:WithId<BlogDb>):OutputBlogType => {
         isMembership:blog.isMembership
     }
 }
-
-const a = 1;

@@ -7,6 +7,7 @@ export type CreatePostType = {
     shortDescription:string
     content:string
     blogId:string
+    blogName:string
 }
 
 export type UpdatePostType = {
@@ -14,7 +15,9 @@ export type UpdatePostType = {
     shortDescription:string
     content:string
     blogId:string
-    blogName:string}
+    blogName:string
+
+}
 
 export type ViewPostType = {
     id:string
@@ -26,5 +29,11 @@ export type ViewPostType = {
     createdAt:string
 }
 
-export type OutputPostType = ViewPostType
+export type OutputPostType = { id:string
+    title:string
+    shortDescription:string
+    content:string
+    blogId:string
+    blogName:string
+    createdAt:string }
 

@@ -1,16 +1,13 @@
-import express, {Router, Response, Request} from "express";
-import {authMiddleware} from "../../../middlewares/auth/auth-middleware";
-import {blogValidation} from "../validators/blog-validator";
-import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "../../../types";
-import {BlogRepository} from "../repositories/blog-repository";
-import {BlogIdType, CreateBlogType, UpdateBlogType, OutputBlogType, ViewBlogType} from "../models/models";
+import {Router, Response, Request} from "express";
+import {authMiddleware} from "../middlewares/auth/auth-middleware";
+import {blogValidation} from "../middlewares/validators/blog-validator";
+import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody} from "../types";
+import {BlogRepository} from "../repository/blog-repository";
+import {BlogIdType, CreateBlogType, UpdateBlogType, ViewBlogType} from "../models/blogs.models";
 import {ObjectId} from "mongodb";
-import {HTTP_STATUSES} from "../../../utils";
+import {HTTP_STATUSES} from "../utils";
 
 export const blogsRouter = Router({})
-
-
-
 
 blogsRouter.get('/', async (req: Request, res: Response) => {
         const blogs = await BlogRepository.getAll()

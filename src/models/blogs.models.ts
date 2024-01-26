@@ -8,7 +8,9 @@ export type CreateBlogType = {
     websiteUrl:string
 }
 
-export type UpdateBlogType = CreateBlogType
+export type UpdateBlogType = { name:string
+    description:string
+    websiteUrl:string }
 
 export type ViewBlogType = {
     id:string
@@ -20,4 +22,11 @@ export type ViewBlogType = {
 
 }
 
-export type OutputBlogType = ViewBlogType
+export type OutputBlogType = {
+    id:string
+    name:string
+    description:string,
+    websiteUrl:string
+    createdAt:string,
+    isMembership:boolean
+}

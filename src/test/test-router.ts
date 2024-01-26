@@ -1,4 +1,4 @@
-import express, {Router} from "express";
+import {Router} from "express";
 import {blogsCollection, database, postsCollection} from "../db/db";
 import {HTTP_STATUSES} from "../utils";
 
