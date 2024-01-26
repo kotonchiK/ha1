@@ -23,9 +23,10 @@ export class PostRepository {
         return postMapper(post)
     }
 
-    static async createPost(createData: CreatePostType):Promise<ViewPostType> {
+    static async createPost(createData: CreatePostType, blogName: string):Promise<ViewPostType> {
         const newPost = {
             ...createData,
+            blogName,
             createdAt: new Date().toISOString()
         }
         const post = await postsCollection.insertOne({...newPost})
