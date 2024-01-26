@@ -17,6 +17,7 @@ export const postsCollection = database.collection<PostDb>('posts')
 
 export const runDb = async () => {
     try{
+        console.log(uri)
         await client.connect()
 
         console.log('Client connected to DB')

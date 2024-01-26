@@ -12,3 +12,5 @@ export const blogMapper = (blog:WithId<BlogDb>):OutputBlogType => {
         isMembership:blog.isMembership
     }
 }
+
+const a = 1;
