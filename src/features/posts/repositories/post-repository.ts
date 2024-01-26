@@ -2,9 +2,10 @@ import {CreatePostType, OutputPostType, UpdatePostType, ViewPostType} from "../m
 import {blogsCollection, postsCollection} from "../../../db/db";
 import {postsRouter} from "../router/posts-router";
 import {postMapper} from "../mappers/post-mapper";
-import {OutputBlogType} from "../../blogs/models/models";
+import {OutputBlogType, ViewBlogType} from "../../blogs/models/models";
 import {ObjectId} from "mongodb";
 import {blogMapper} from "../../blogs/mappers/blog-mapper";
+import {BlogRepository} from "../../blogs/repositories/blog-repository";
 
 export class PostRepository {
 
@@ -23,10 +24,11 @@ export class PostRepository {
         return postMapper(post)
     }
 
-    static async createPost(createData: CreatePostType, blogName: string):Promise<ViewPostType> {
+    static async createPost(createData: CreatePostType):Promise<ViewPostType> {
+        const blog = await BlogRepository.getById(createData.blogId)
         const newPost = {
             ...createData,
-            blogName,
+            blogName: blog!.name,
             createdAt: new Date().toISOString()
         }
         const post = await postsCollection.insertOne({...newPost})

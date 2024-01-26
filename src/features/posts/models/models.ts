@@ -7,10 +7,14 @@ export type CreatePostType = {
     shortDescription:string
     content:string
     blogId:string
-    blogName:string
 }
 
-export type UpdatePostType = CreatePostType
+export type UpdatePostType = {
+    title:string
+    shortDescription:string
+    content:string
+    blogId:string
+    blogName:string}
 
 export type ViewPostType = {
     id:string
