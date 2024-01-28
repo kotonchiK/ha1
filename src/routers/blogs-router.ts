@@ -97,7 +97,7 @@ blogsRouter.post('/:id/posts', authMiddleware, createPostFromBlogValidation(), a
     const post = await BlogService.createPostToBlog(id, createPostFromBlogModel)
 
     if(!post){
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return
     }
 
