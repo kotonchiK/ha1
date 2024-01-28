@@ -6,6 +6,8 @@ export type CreateBlogType = {
     name:string
     description:string
     websiteUrl:string
+    isMembership: boolean
+    createdAt: string
 }
 
 export type UpdateBlogType = { name:string
@@ -29,4 +31,10 @@ export type OutputBlogType = {
     websiteUrl:string
     createdAt:string,
     isMembership:boolean
+}
+
+export type CreatePostFromBlogType = {
+    title:string
+   shortDescription:string
+    content:string
 }

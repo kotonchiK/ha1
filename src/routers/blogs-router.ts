@@ -1,16 +1,48 @@
 import {Router, Response, Request} from "express";
 import {authMiddleware} from "../middlewares/auth/auth-middleware";
 import {blogValidation} from "../middlewares/validators/blog-validator";
-import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody} from "../types";
+import {
+    Pagination, ParamType,
+    RequestWithBody,
+    RequestWithParams,
+    RequestWithParamsAndBody,
+    RequestWithQuery,
+    ResponseType
+} from "../types";
 import {BlogRepository} from "../repository/blog-repository";
-import {BlogIdType, CreateBlogType, UpdateBlogType, ViewBlogType} from "../models/blogs.models";
+import {
+    BlogIdType,
+    CreateBlogType,
+    CreatePostFromBlogType,
+    OutputBlogType,
+    UpdateBlogType,
+    ViewBlogType
+} from "../models/blogs.models";
 import {ObjectId} from "mongodb";
 import {HTTP_STATUSES} from "../utils";
+import {QueryBlogInputModel} from "../models/query.blog.input.model";
+import {BlogQueryRepository} from "../repository/blog.query.repository";
+import {createPostFromBlogValidation} from "../middlewares/validators/post-validator";
+import {PostDb} from "../db/types/posts.types";
+import {PostRepository} from "../repository/post-repository";
+import {PostQueryRepository} from "../repository/post.query.repository";
+import {OutputPostType} from "../models/posts.models";
+import {BlogService} from "../services/blog.service";
+import {PostService} from "../services/post.service";
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', async (req: Request, res: Response) => {
-        const blogs = await BlogRepository.getAll()
+blogsRouter.get('/', async (req: RequestWithQuery<QueryBlogInputModel>, res: ResponseType<Pagination<OutputBlogType>>) =>{
+
+    const sortData = {
+        searchNameTerm:req.query.searchNameTerm ?? null,
+        sortBy: req.query.sortBy ?? "createdAt",
+        sortDirection:req.query.sortDirection ?? "desc",
+        pageNumber:req.query.pageNumber ? +req.query.pageNumber : 1,
+        pageSize:req.query.pageSize ?? 10
+    }
+
+        const blogs = await BlogQueryRepository.getAll(sortData)
         res.send(blogs)
     })
 
@@ -21,7 +53,7 @@ blogsRouter.get('/:id', async (req: RequestWithParams<BlogIdType>, res: Response
             res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
             return;
         }
-        const blog = await BlogRepository.getById(id)
+        const blog = await BlogQueryRepository.getById(id)
         if (!blog) {
             res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
             return
@@ -30,21 +62,49 @@ blogsRouter.get('/:id', async (req: RequestWithParams<BlogIdType>, res: Response
         }
     })
 
-blogsRouter.post('/', authMiddleware, blogValidation(), async (req: RequestWithBody<CreateBlogType>, res: Response) => {
+blogsRouter.post('/', authMiddleware, blogValidation(), async (req: RequestWithBody<CreateBlogType>, res: ResponseType<OutputBlogType>) => {
 
-        const createData  = {
-            name:req.body.name,
-            description:req.body.description,
-            websiteUrl:req.body.websiteUrl
+        const {name, description, websiteUrl} = req.body
+
+        const newBlog = {
+            name,
+            websiteUrl,
+            description,
+            isMembership:false,
+            createdAt: new Date().toISOString()
         }
+        const createdBlog = await BlogService.createBlog(newBlog)
 
-        const newBlog = await BlogRepository.createBlog(createData)
-
-        res
-            .status(HTTP_STATUSES.CREATED_201)
-            .send(newBlog)
+    if(!createdBlog) {
+        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+        return
+    }
+    res.status(HTTP_STATUSES.CREATED_201).send(createdBlog)
 
     })
+
+blogsRouter.post('/:id/posts', authMiddleware, createPostFromBlogValidation(), async (req: RequestWithParamsAndBody<ParamType ,CreatePostFromBlogType>, res: ResponseType<OutputPostType>) => {
+    const id = req.params.id
+    if (!ObjectId.isValid(id)) {
+        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+        return
+    }
+    const createPostFromBlogModel = {
+        title:req.body.title,
+        shortDescription:req.body.shortDescription,
+        content:req.body.content
+    }
+    const post = await BlogService.createPostToBlog(id, createPostFromBlogModel)
+
+    if(!post){
+        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+        return
+    }
+
+    res.status(HTTP_STATUSES.CREATED_201).send(post)
+
+
+})
 
 blogsRouter.put('/:id', authMiddleware, blogValidation(), async (req: RequestWithParamsAndBody<BlogIdType, UpdateBlogType>, res: Response) => {
 
@@ -61,20 +121,14 @@ blogsRouter.put('/:id', authMiddleware, blogValidation(), async (req: RequestWit
             websiteUrl:req.body.websiteUrl
         }
 
-        const blog = await BlogRepository.getById(id)
-        if (!blog) {
-            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-            return
-        }
+        const blogIsUpdated = await BlogService.updateBlog(id, updateData)
+    if(!blogIsUpdated) {
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return
+    }
 
-        const updateBlog = await BlogRepository.updateBlog(id, updateData)
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 
-        if(!updateBlog){
-            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-            return
-        }
-
-        res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     })
 
 blogsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<BlogIdType>, res: Response) => {
@@ -87,10 +141,12 @@ blogsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<BlogIdT
             return
         }
 
-        const deleteBlog = await BlogRepository.deleteById(id)
-        if (!deleteBlog) {
-            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-            return
-        }
-        res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+        const blogIsDeleted = await BlogService.deleteBlog(id)
+
+    if(!blogIsDeleted) {
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return
+    }
+
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     })
