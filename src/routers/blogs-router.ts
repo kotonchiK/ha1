@@ -152,6 +152,7 @@ blogsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<BlogIdT
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     })
 
+const  a = 1
 // blogsRouter.get('/:id/posts', async (req: RequestWithParamsAndQuery<BlogIdType,QueryPostnputModel>, res: ResponseType<Pagination<OutputPostType> | null>) =>{
 //
 //     const blogId = req.params.id
