@@ -5,7 +5,7 @@ import {
     Pagination, ParamType,
     RequestWithBody,
     RequestWithParams,
-    RequestWithParamsAndBody,
+    RequestWithParamsAndBody, RequestWithParamsAndQuery,
     RequestWithQuery,
     ResponseType
 } from "../types";
@@ -29,6 +29,7 @@ import {PostQueryRepository} from "../repository/post.query.repository";
 import {OutputPostType} from "../models/posts.models";
 import {BlogService} from "../services/blog.service";
 import {PostService} from "../services/post.service";
+import {QueryPostnputModel} from "../models/query.post.input.model";
 
 export const blogsRouter = Router({})
 
@@ -150,3 +151,26 @@ blogsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<BlogIdT
 
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     })
+
+blogsRouter.get('/:id/posts', async (req: RequestWithParamsAndQuery<BlogIdType,QueryPostnputModel>, res: ResponseType<Pagination<OutputPostType> | null>) =>{
+
+    const blogId = req.params.id
+    if(!ObjectId.isValid(blogId))
+    {
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return
+    }
+    const sortData = {
+        sortBy: req.query.sortBy ?? "createdAt",
+        sortDirection:req.query.sortDirection ?? "desc",
+        pageNumber:req.query.pageNumber ? +req.query.pageNumber : 1,
+        pageSize:req.query.pageSize ?? 10,
+    }
+    const posts = await PostQueryRepository.getByIdSort(blogId, sortData)
+    if(!posts){
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return
+    }
+
+    res.send(posts)
+})

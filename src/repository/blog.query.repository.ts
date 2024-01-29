@@ -1,8 +1,9 @@
 import {CreateBlogType, OutputBlogType, UpdateBlogType, ViewBlogType} from "../models/blogs.models";
 import {blogsCollection} from "../db/db";
 import {blogMapper} from "../mappers/blog-mapper";
-import {ObjectId, SortDirection} from "mongodb";
+import {Filter, ObjectId, SortDirection} from "mongodb";
 import {Pagination} from "../types";
+import {OutputPostType} from "../models/posts.models";
 
 export type SortData = {
     searchNameTerm:string | null
@@ -11,7 +12,9 @@ export type SortData = {
     pageNumber:number
     pageSize:number
 }
+
 export class BlogQueryRepository {
+
     static async getAll(sortData: SortData): Promise<Pagination<OutputBlogType>> {
 
         const {searchNameTerm, sortBy, sortDirection, pageNumber, pageSize} = sortData

@@ -3,8 +3,21 @@ import {blogsCollection} from "../db/db";
 import {blogMapper} from "../mappers/blog-mapper";
 import {ObjectId} from "mongodb";
 import {BlogDb} from "../db/types/blogs.types";
+import {Pagination} from "../types";
+import {SortData} from "./blog.query.repository";
 
 export class BlogRepository {
+
+    static async getAll():Promise<OutputBlogType[] | null>{
+try{
+    const blogs = await blogsCollection.find({}).toArray()
+    return blogs.map(blogMapper)
+
+} catch (e) {
+    return null
+}
+
+    }
 
     static async getById(id: string):Promise<BlogDb | null> {
         const blog = await blogsCollection.findOne({_id: new ObjectId(id)})
