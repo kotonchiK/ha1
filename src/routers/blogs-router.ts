@@ -83,7 +83,7 @@ blogsRouter.get('/:id/posts', async (req: RequestWithParamsAndQuery<BlogIdType,Q
         sortBy: req.query.sortBy ?? "createdAt",
         sortDirection:req.query.sortDirection ?? "desc",
         pageNumber:req.query.pageNumber ? +req.query.pageNumber : 1,
-        pageSize:req.query.pageSize ?? 10,
+        pageSize:req.query.pageSize ? +req.query.pageSize : 10,
     }
     const posts = await PostQueryRepository.getByIdSort(blogId, sortData)
     if(!posts){
