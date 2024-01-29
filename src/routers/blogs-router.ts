@@ -40,7 +40,7 @@ blogsRouter.get('/', async (req: RequestWithQuery<QueryBlogInputModel>, res: Res
         sortBy: req.query.sortBy ?? "createdAt",
         sortDirection:req.query.sortDirection ?? "desc",
         pageNumber:req.query.pageNumber ? +req.query.pageNumber : 1,
-        pageSize:req.query.pageSize ?? 10
+        pageSize:req.query.pageSize ? +req.query.pageSize : 10
     }
 
         const blogs = await BlogQueryRepository.getAll(sortData)
