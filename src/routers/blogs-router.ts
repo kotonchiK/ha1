@@ -153,25 +153,29 @@ blogsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<BlogIdT
     })
 
 const  a = 1
-// blogsRouter.get('/:id/posts', async (req: RequestWithParamsAndQuery<BlogIdType,QueryPostnputModel>, res: ResponseType<Pagination<OutputPostType> | null>) =>{
-//
-//     const blogId = req.params.id
-//     if(!ObjectId.isValid(blogId))
-//     {
-//         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-//         return
-//     }
-//     const sortData = {
-//         sortBy: req.query.sortBy ?? "createdAt",
-//         sortDirection:req.query.sortDirection ?? "desc",
-//         pageNumber:req.query.pageNumber ? +req.query.pageNumber : 1,
-//         pageSize:req.query.pageSize ?? 10,
-//     }
-//     const posts = await PostQueryRepository.getByIdSort(blogId, sortData)
-//     if(!posts){
-//         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-//         return
-//     }
-//
-//     res.send(posts)
-// })
+
+// get - blogs/id/posts
+
+// pagination get
+blogsRouter.get('/:id/posts', async (req: RequestWithParamsAndQuery<BlogIdType,QueryPostnputModel>, res: ResponseType<Pagination<OutputPostType> | null>) =>{
+
+    const blogId = req.params.id
+    if(!ObjectId.isValid(blogId))
+    {
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return
+    }
+    const sortData = {
+        sortBy: req.query.sortBy ?? "createdAt",
+        sortDirection:req.query.sortDirection ?? "desc",
+        pageNumber:req.query.pageNumber ? +req.query.pageNumber : 1,
+        pageSize:req.query.pageSize ?? 10,
+    }
+    const posts = await PostQueryRepository.getByIdSort(blogId, sortData)
+    if(!posts){
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return
+    }
+
+    res.send(posts)
+})
