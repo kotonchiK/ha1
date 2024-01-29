@@ -71,6 +71,14 @@ blogsRouter.get('/:id/posts', async (req: RequestWithParamsAndQuery<BlogIdType,Q
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return
     }
+
+    const blog = await BlogRepository.getById(blogId)
+
+    if(!blog) {
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return
+    }
+
     const sortData = {
         sortBy: req.query.sortBy ?? "createdAt",
         sortDirection:req.query.sortDirection ?? "desc",
@@ -83,7 +91,7 @@ blogsRouter.get('/:id/posts', async (req: RequestWithParamsAndQuery<BlogIdType,Q
         return
     }
 
-    res.send(posts)
+    res.status(HTTP_STATUSES.OK_200).send(posts)
 })
 
 blogsRouter.post('/', authMiddleware, blogValidation(), async (req: RequestWithBody<CreateBlogType>, res: ResponseType<OutputBlogType>) => {
