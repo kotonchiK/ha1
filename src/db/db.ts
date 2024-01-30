@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import {MongoClient} from "mongodb";
 import {BlogDb} from "./types/blogs.types";
 import {PostDb} from "./types/posts.types";
+import {UserDb} from "./types/user.types";
 
 dotenv.config()
 
@@ -16,6 +17,7 @@ export const database = client.db('blogs-db')
 export const blogsCollection = database.collection<BlogDb>('blogs')
 export const postsCollection = database.collection<PostDb>('posts')
 
+export const usersCollection = database.collection<UserDb>('users')
 export const runDb = async () => {
     try{
         console.log(uri)

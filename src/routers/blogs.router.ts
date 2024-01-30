@@ -1,6 +1,6 @@
 import {Router, Response, Request} from "express";
-import {authMiddleware} from "../middlewares/auth/auth-middleware";
-import {blogValidation} from "../middlewares/validators/blog-validator";
+import {authMiddleware} from "../middlewares/auth/auth.middleware";
+import {blogValidation} from "../middlewares/validators/blog.validator";
 import {
     Pagination, ParamType,
     RequestWithBody,
@@ -9,7 +9,7 @@ import {
     RequestWithQuery,
     ResponseType
 } from "../types";
-import {BlogRepository} from "../repository/blog-repository";
+import {BlogRepository} from "../repository/blog.repository";
 import {
     BlogIdType,
     CreateBlogType,
@@ -22,14 +22,14 @@ import {ObjectId} from "mongodb";
 import {HTTP_STATUSES} from "../utils";
 import {QueryBlogInputModel} from "../models/query.blog.input.model";
 import {BlogQueryRepository} from "../repository/blog.query.repository";
-import {createPostFromBlogValidation} from "../middlewares/validators/post-validator";
+import {createPostFromBlogValidation} from "../middlewares/validators/post.validator";
 import {PostDb} from "../db/types/posts.types";
-import {PostRepository} from "../repository/post-repository";
+import {PostRepository} from "../repository/post.repository";
 import {PostQueryRepository} from "../repository/post.query.repository";
 import {OutputPostType} from "../models/posts.models";
 import {BlogService} from "../services/blog.service";
 import {PostService} from "../services/post.service";
-import {QueryPostnputModel} from "../models/query.post.input.model";
+import {QueryPostInputModel} from "../models/query.post.input.model";
 
 export const blogsRouter = Router({})
 
@@ -63,7 +63,7 @@ blogsRouter.get('/:id', async (req: RequestWithParams<BlogIdType>, res: Response
         }
     })
 
-blogsRouter.get('/:id/posts', async (req: RequestWithParamsAndQuery<BlogIdType,QueryPostnputModel>, res: ResponseType<Pagination<OutputPostType> | null>) =>{
+blogsRouter.get('/:id/posts', async (req: RequestWithParamsAndQuery<BlogIdType,QueryPostInputModel>, res: ResponseType<Pagination<OutputPostType> | null>) =>{
 
     const blogId = req.params.id
     if(!ObjectId.isValid(blogId))
@@ -182,9 +182,3 @@ blogsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<BlogIdT
 
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
     })
-
-const  a = 1
-
-// get - blogs/id/posts
-
-// pagination get

@@ -1,5 +1,5 @@
 import {body} from "express-validator";
-import {inputValidationMiddleware} from "../inputValidation/inputValidation-middleware";
+import {inputValidationMiddleware} from "../inputValidation/inputValidation.middleware";
 
 const nameValidator = body('name').isString().trim().isLength({min:1, max: 15}).withMessage('Incorrect name')
 
@@ -9,4 +9,3 @@ const websiteUrlValidator = body('websiteUrl').isString().trim().isLength({min:1
 
 export const blogValidation = () => [websiteUrlValidator, nameValidator, descriptionValidator, inputValidationMiddleware]
 
-body('year').isNumeric().withMessage('Incorrect year')

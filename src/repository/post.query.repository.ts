@@ -1,8 +1,8 @@
 import {CreatePostType, OutputPostType, UpdatePostType, ViewPostType} from "../models/posts.models";
 import {blogsCollection, postsCollection} from "../db/db";
-import {postMapper} from "../mappers/post-mapper";
+import {postMapper} from "../mappers/post.mapper";
 import {ObjectId, SortDirection} from "mongodb";
-import {BlogRepository} from "./blog-repository";
+import {BlogRepository} from "./blog.repository";
 import {Pagination} from "../types";
 import {OutputBlogType} from "../models/blogs.models";
 import {BlogQueryRepository} from "./blog.query.repository";

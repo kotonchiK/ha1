@@ -10,7 +10,8 @@ export type CreateBlogType = {
     createdAt: string
 }
 
-export type UpdateBlogType = { name:string
+export type UpdateBlogType = {
+    name:string
     description:string
     websiteUrl:string }
 

@@ -1,7 +1,7 @@
-import {BlogRepository} from "../repository/blog-repository";
+import {BlogRepository} from "../repository/blog.repository";
 import {HTTP_STATUSES} from "../utils";
 import {PostDb} from "../db/types/posts.types";
-import {PostRepository} from "../repository/post-repository";
+import {PostRepository} from "../repository/post.repository";
 import {PostQueryRepository} from "../repository/post.query.repository";
 import {CreateBlogType, CreatePostFromBlogType, OutputBlogType, UpdateBlogType} from "../models/blogs.models";
 import {OutputPostType} from "../models/posts.models";
