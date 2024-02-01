@@ -1,6 +1,6 @@
 import {Response, Router} from "express";
 import {Pagination, RequestWithBody, RequestWithParams, RequestWithQuery, ResponseType} from "../types";
-import {CreateUserType, QueryUserInputModel} from "../models/users.input.models";
+import {CreateInputUserModel, QueryUserInputModel} from "../models/users.input.models";
 import {OutputUserType} from "../models/users.output.models";
 import {UserQueryRepository} from "../repository/users.query.repository";
 import {authMiddleware} from "../middlewares/auth/auth.middleware";
@@ -13,7 +13,7 @@ import {userValidation} from "../middlewares/validators/auth.validator";
 
 export const usersRouter = Router({})
 
-usersRouter.get('/', async (req: RequestWithQuery<QueryUserInputModel>, res:ResponseType<Pagination<OutputUserType>>) => {
+usersRouter.get('/', async (req: RequestWithQuery<QueryUserInputModel>, res:Response) => {
     const sortData = {
         searchLoginTerm:req.query.searchLoginTerm ?? null,
         searchEmailTerm:req.query.searchEmailTerm ?? null,
@@ -22,41 +22,30 @@ usersRouter.get('/', async (req: RequestWithQuery<QueryUserInputModel>, res:Resp
         pageNumber:req.query.pageNumber ? +req.query.pageNumber : 1,
         pageSize:req.query.pageSize ? +req.query.pageSize : 10
     }
-
     const users = await UserQueryRepository.getAllUsers(sortData)
-    res.send(users)
-
+    return res.status(HTTP_STATUSES.OK_200).send(users)
 })
 
 
-usersRouter.post('/', userValidation, /* validation */async (req:RequestWithBody<CreateUserType>, res:ResponseType<OutputUserType>) => {
+usersRouter.post('/', authMiddleware, userValidation(), async (req:RequestWithBody<CreateInputUserModel>, res:ResponseType<OutputUserType>) => {
 
-    const {id, login, email,} = req.body
-
-    const newUser = {
-        id,
-        login,
-        email,
-        createdAt:new Date().toISOString()
-    }
-    const createUser = await UsersService.createUser(newUser)
+    const createUser = await UsersService.createUser(req.body)
     if(!createUser) {
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
         return
     }
-    res.status(HTTP_STATUSES.CREATED_201).send(createUser)
-
+   return res.status(HTTP_STATUSES.CREATED_201).send(createUser)
 })
-usersRouter.delete('/:id', authMiddleware,async (req: RequestWithParams<{id:string}>, res: Response)=> {
-    const id = req.params.id
-    if(!ObjectId.isValid(id)) {
+usersRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<{id:string}>, res: Response)=> {
+    const userId = req.params.id
+    if(!ObjectId.isValid(userId)) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return
     }
-    const userIsDeleted = await UsersService.deleteUser(id)
-    if(!userIsDeleted) {
+    const isUserDeleted = await UsersService.deleteUser(userId)
+    if(!isUserDeleted) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return
     }
-    res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })

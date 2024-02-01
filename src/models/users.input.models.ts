@@ -1,4 +1,5 @@
 import {SortDirection} from "mongodb";
+import exp from "node:constants";
 
 export type QueryUserInputModel = {
     searchEmailTerm:string
@@ -9,9 +10,13 @@ export type QueryUserInputModel = {
     pageSize?:number
 }
 
-export type CreateUserType = {
-    id:string
+export type CreateInputUserModel= {
     login:string
     email:string
-    createdAt:string
+    password:string
+}
+
+export type LoginOrEmailModel = {
+    login:string
+    password:string
 }

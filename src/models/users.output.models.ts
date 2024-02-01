@@ -1,5 +1,5 @@
 export type OutputUserType = {
-    id: string
+    id:string
     login:string
     email:string
     createdAt: string

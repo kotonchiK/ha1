@@ -21,24 +21,13 @@ export class UserQueryRepository {
 
         const {searchEmailTerm,searchLoginTerm, sortBy, sortDirection, pageNumber, pageSize} = sortData
 
-        let filter = {}
-
-        if (searchLoginTerm) {
-            filter = {
-                name: {
-                    $regex: searchLoginTerm,
-                    $options: 'i'
-                }
-            }
+        const filter = {
+            $or: [
+                {$regex:searchEmailTerm, $options: 'i'},
+                {$regex:searchLoginTerm, $options: 'i'}
+            ]
         }
-        if (searchEmailTerm) {
-            filter = {
-                name: {
-                    $regex: searchEmailTerm,
-                    $options: 'i'
-                }
-            }
-        }
+        const totalCount = await usersCollection.countDocuments(filter)
 
         const users = await usersCollection
             .find(filter)
@@ -46,8 +35,6 @@ export class UserQueryRepository {
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .toArray()
-
-        const totalCount = await usersCollection.countDocuments(filter)
 
         const pagesCount = Math.ceil(totalCount / pageSize)
 
@@ -60,8 +47,8 @@ export class UserQueryRepository {
         }
     }
 
-    static async getUserById(id:string):Promise<OutputUserType| null> {
-        const foundUser = await usersCollection.findOne({_id:new ObjectId(id)})
+    static async getUserById(userId:string):Promise<OutputUserType| null> {
+        const foundUser = await usersCollection.findOne({_id:new ObjectId(userId)})
         if(!foundUser){
             return null
         }
