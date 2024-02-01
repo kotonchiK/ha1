@@ -10,7 +10,7 @@ import {UsersService} from "../services/users.service";
 export class UserRepository {
 
     static async getByLoginOrEmail(user:LoginOrEmailModel) {
-        const getUser = await database.collection<UserDb>('users').findOne({$or: [{login: user.login}, {email:user.login}]})
+        const getUser = await database.collection<UserDb>('users').findOne({$or: [{login: user.loginOrEmail}, {email:user.loginOrEmail}]})
         if(!getUser){
             return null
         }

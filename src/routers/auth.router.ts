@@ -13,10 +13,10 @@ import {usersCollection} from "../db/db";
 export const authRouter = Router({})
 
 
-authRouter.post('/auth/login', loginValidation(), async (req:RequestWithBody<LoginOrEmailModel>, res:ResponseType<string>) => {
+authRouter.post('/', loginValidation(), async (req:RequestWithBody<LoginOrEmailModel>, res:ResponseType<string>) => {
 
     const data = {
-        login:req.body.login,
+        loginOrEmail:req.body.loginOrEmail,
         password:req.body.password
     }
 

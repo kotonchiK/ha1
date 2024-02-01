@@ -17,6 +17,6 @@ export type CreateInputUserModel= {
 }
 
 export type LoginOrEmailModel = {
-    login:string
+    loginOrEmail:string
     password:string
 }
