@@ -18,10 +18,11 @@ export class UserRepository {
         const userPassword= await UsersService._generateHash(user.password, getUser.salt)
 
         const isPassword = await bcrypt.compare(userPassword, getUser.password)
+
         if(!isPassword) {
             return null
         }
-        return this.mapperUserToServiceUser(getUser)
+        return isPassword
     }
 
     static async createUser(createUser: UserDb):Promise<string | null> {
