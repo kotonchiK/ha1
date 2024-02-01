@@ -5,17 +5,20 @@ import {CreateBlogType} from "../models/blogs.models";
 import {UserDb} from "../db/types/user.types";
 import {LoginOrEmailModel} from "../models/users.input.models";
 import bcrypt from "bcrypt";
+import {UsersService} from "../services/users.service";
 
 export class UserRepository {
 
-    static async getByLoginOrEmail(loginOrEmail:LoginOrEmailModel) {
-        const getUser = await database.collection<UserDb>('users').findOne({$or: [{login: loginOrEmail.login}, {email:loginOrEmail.login}]})
+    static async getByLoginOrEmail(user:LoginOrEmailModel) {
+        const getUser = await database.collection<UserDb>('users').findOne({$or: [{login: user.login}, {email:user.login}]})
         if(!getUser){
             return null
         }
 
-        const isPasswordMath = await bcrypt.compare(loginOrEmail.password, getUser.password)
-        if(!isPasswordMath) {
+        const userPassword= await UsersService._generateHash(user.password, getUser.salt)
+
+        const isPassword = await bcrypt.compare(userPassword, getUser.password)
+        if(!isPassword) {
             return null
         }
         return this.mapperUserToServiceUser(getUser)

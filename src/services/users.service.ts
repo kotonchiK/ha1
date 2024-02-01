@@ -14,6 +14,7 @@ export class UsersService {
           login:userModel.login,
             email:userModel.email,
             password:passwordHash,
+            salt:passwordSalt,
             createdAt:new Date().toISOString()
         }
         const createdUserId = await UserRepository.createUser(newUser)

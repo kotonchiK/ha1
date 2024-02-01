@@ -15,7 +15,12 @@ export const authRouter = Router({})
 
 authRouter.post('/auth/login', loginValidation(), async (req:RequestWithBody<LoginOrEmailModel>, res:ResponseType<string>) => {
 
-    const user = await UserRepository.getByLoginOrEmail(req.body)
+    const data = {
+        login:req.body.login,
+        password:req.body.password
+    }
+
+    const user = await UserRepository.getByLoginOrEmail(data)
     if(!user) {
         res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
         return
