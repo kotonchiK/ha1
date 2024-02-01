@@ -13,7 +13,7 @@ import {usersCollection} from "../db/db";
 export const authRouter = Router({})
 
 
-authRouter.post('/login', loginValidation(), async (req:RequestWithBody<LoginOrEmailModel>, res:ResponseType<string>) => {
+authRouter.post('/auth/login', loginValidation(), async (req:RequestWithBody<LoginOrEmailModel>, res:ResponseType<string>) => {
 
     const user = await UserRepository.getByLoginOrEmail(req.body)
     if(!user) {
