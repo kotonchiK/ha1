@@ -23,11 +23,10 @@ export class UserQueryRepository {
 
         const filter = {
             $or: [
-                {searchEmailTerm:searchEmailTerm},
-                {searchLoginTerm:searchLoginTerm}
+                {email:{$regex:searchEmailTerm || '', $options:'i'}},
+                {login:{$regex:searchLoginTerm || '', $options:'i'}}
             ]
         }
-        const totalCount = await usersCollection.countDocuments(filter)
 
         const users = await usersCollection
             .find(filter)
@@ -35,6 +34,8 @@ export class UserQueryRepository {
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .toArray()
+
+        const totalCount = await usersCollection.countDocuments(filter)
 
         const pagesCount = Math.ceil(totalCount / pageSize)
 
