@@ -16,7 +16,7 @@ app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
 app.use('/testing/all-data', testRouter)
 app.use('/users',usersRouter)
-app.use('auth/login', authRouter)
+app.use('/auth/login', authRouter)
 
 app.listen(port, async () => {
     await runDb()
