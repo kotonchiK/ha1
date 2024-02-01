@@ -29,7 +29,12 @@ usersRouter.get('/', async (req: RequestWithQuery<QueryUserInputModel>, res:Resp
 
 usersRouter.post('/', authMiddleware, userValidation(), async (req:RequestWithBody<CreateInputUserModel>, res:ResponseType<OutputUserType>) => {
 
-    const createUser = await UsersService.createUser(req.body)
+    const userData = {
+        login:req.body.login,
+        email:req.body.email,
+        password:req.body.password
+    }
+    const createUser = await UsersService.createUser(userData)
     if(!createUser) {
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
         return

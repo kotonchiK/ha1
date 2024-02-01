@@ -25,7 +25,7 @@ export class UserRepository {
     }
 
     static async createUser(createUser: UserDb):Promise<string | null> {
-        const user = await usersCollection.insertOne({...createUser})
+        const user = await usersCollection.insertOne(createUser)
         return user.insertedId.toString()
     }
 

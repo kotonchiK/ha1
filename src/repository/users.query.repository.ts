@@ -23,8 +23,8 @@ export class UserQueryRepository {
 
         const filter = {
             $or: [
-                {$regex:searchEmailTerm, $options: 'i'},
-                {$regex:searchLoginTerm, $options: 'i'}
+                {searchEmailTerm:searchEmailTerm},
+                {searchLoginTerm:searchLoginTerm}
             ]
         }
         const totalCount = await usersCollection.countDocuments(filter)
