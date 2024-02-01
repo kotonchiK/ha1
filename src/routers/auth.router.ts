@@ -20,15 +20,10 @@ authRouter.post('/', loginValidation(), async (req:RequestWithBody<LoginOrEmailM
         password:req.body.password
     }
 
-    const authorized = await UserRepository.getByLoginOrEmail(data)
-    if(!authorized) {
+    const user = await UserRepository.getByLoginOrEmail(data)
+    if(!user) {
         res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
         return
-    }
-
-    if(authorized) {
-        res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
-
     }
     return res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
 })

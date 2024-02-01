@@ -14,15 +14,17 @@ export class UserRepository {
         if(!getUser){
             return null
         }
+        // const getUser = await database.collection<UserDb>('users').findOne({$or: [{login: {$regex:user.loginOrEmail, $options:'i'}}, {email:{$regex:user.loginOrEmail, $options: 'i'}}]})
+
+
 
         const userPassword= await UsersService._generateHash(user.password, getUser.salt)
 
         const isPassword = await bcrypt.compare(userPassword, getUser.password)
-
         if(!isPassword) {
             return null
         }
-        return isPassword
+        return this.mapperUserToServiceUser(getUser)
     }
 
     static async createUser(createUser: UserDb):Promise<string | null> {
