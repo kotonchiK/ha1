@@ -16,15 +16,18 @@ export class UserRepository {
         }
         // const getUser = await database.collection<UserDb>('users').findOne({$or: [{login: {$regex:user.loginOrEmail, $options:'i'}}, {email:{$regex:user.loginOrEmail, $options: 'i'}}]})
 
-
-
         const userPassword= await UsersService._generateHash(user.password, getUser.salt)
 
         const isPassword = await bcrypt.compare(userPassword, getUser.password)
-        if(!isPassword) {
-            return null
+        if(isPassword) {
+            return {
+                id:getUser._id.toString(),
+                login:getUser.login,
+                email:getUser.email,
+                createdAt:getUser.createdAt
+            }
         }
-        return this.mapperUserToServiceUser(getUser)
+        return null
     }
 
     static async createUser(createUser: UserDb):Promise<string | null> {
@@ -38,15 +41,5 @@ export class UserRepository {
             return null
         }
         return !!foundUser.deletedCount
-    }
-
-    static async mapperUserToServiceUser(User:WithId<UserDb>) {
-        return {
-            id:User._id.toString(),
-            login:User.login,
-            email:User.email,
-            password:User.password,
-            createdAt:User.createdAt
-        }
     }
 }
