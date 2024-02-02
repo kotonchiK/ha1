@@ -1,11 +1,21 @@
 import {body} from "express-validator";
 import {inputValidationMiddleware} from "../inputValidation/inputValidation.middleware";
-import {UserRepository} from "../../repository/user.repository";
 
-const loginOrEmailValidation = body("loginOrEmail").isString().withMessage('Incorrect login or email')
-const passwordLoginOrEmailValidation = body("password").isString().withMessage("Incorrect password")
+//   "/auth/login" - post - Validation
 
-export const loginValidation = () => [loginOrEmailValidation, passwordLoginOrEmailValidation, inputValidationMiddleware]
+const loginOrEmailValidator = body("loginOrEmail")
+    .isString()
+    .isLength({min:1})
+    .withMessage('Incorrect login or email')
+
+const passwordLoginOrEmailValidator = body("password")
+    .isString()
+    .isLength({min:1})
+    .withMessage("Incorrect password")
+
+export const loginValidation = () => [loginOrEmailValidator, passwordLoginOrEmailValidator, inputValidationMiddleware]
+
+//   "/user" - post - Validation
 
 const loginValidator = body('login')
     .isString()
@@ -13,7 +23,6 @@ const loginValidator = body('login')
     .isLength({min:3, max:10})
     .matches('^[a-zA-Z0-9_-]*$')
     .withMessage('Incorrect login')
-
 
 const emailValidator = body('email').isString()
     .trim()
@@ -29,4 +38,3 @@ const passwordValidator = body('password')
     .withMessage('Incorrect password')
 
 export const userValidation = () => [loginValidator,emailValidator, passwordValidator, inputValidationMiddleware]
-

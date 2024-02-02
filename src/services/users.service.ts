@@ -5,16 +5,13 @@ import {OutputUserType} from "../models/users.output.models";
 import bcrypt from "bcrypt"
 import {UserDb} from "../db/types/user.types";
 export class UsersService {
-
     static async createUser(userModel:CreateInputUserModel):Promise<OutputUserType | null> {
         const passwordSalt = await bcrypt.genSalt()
         const passwordHash = await this._generateHash(userModel.password, passwordSalt)
-
         const newUser:UserDb = {
             login:userModel.login,
             email:userModel.email,
             password:passwordHash,
-            salt:passwordSalt,
             createdAt:new Date().toISOString()
         }
         const createdUserId = await UserRepository.createUser(newUser)
@@ -33,7 +30,4 @@ export class UsersService {
     }
 
     static async _generateHash(str:string, salt:string) {return bcrypt.hash(str, salt)}
-
-
 }
-

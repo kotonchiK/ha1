@@ -1,6 +1,5 @@
-import {Request, Response, Router} from "express";
+import {Response, Router} from "express";
 import {authMiddleware} from "../middlewares/auth/auth.middleware";
-import {PostRepository} from "../repository/post.repository";
 import {postValidation} from "../middlewares/validators/post.validator";
 import {
     Pagination,
@@ -11,94 +10,66 @@ import {
     ResponseType
 } from "../types";
 import {HTTP_STATUSES} from "../utils";
-import {CreatePostType, OutputPostType, PostIdType, UpdatePostType, ViewPostType} from "../models/posts.models";
 import {ObjectId} from "mongodb";
 import {PostQueryRepository} from "../repository/post.query.repository";
-import {QueryPostInputModel, } from "../models/query.post.input.model";
 import {PostService} from "../services/post.service";
-
+import {CreatePostType, PostIdType, QueryPostInputModel, UpdatePostType} from "../models/posts.input.models";
+import {OutputPostType, ViewPostType} from "../models/posts.output.models";
 export const postsRouter = Router({})
-
+// Get posts with Pagination
 postsRouter.get('/', async (req: RequestWithQuery<QueryPostInputModel>, res: ResponseType<Pagination<OutputPostType>>) => {
-    const sortData = {
-        sortBy: req.query.sortBy ?? "createdAt",
-        sortDirection:req.query.sortDirection ?? "desc",
-        pageNumber:req.query.pageNumber ? +req.query.pageNumber : 1,
-        pageSize:req.query.pageSize ?  +req.query.pageSize:10
-    }
-
-    const posts = await PostQueryRepository.getAll(sortData)
-        res.send(posts)
-    })
-
+    const posts = await PostQueryRepository.getAll({...req.query})
+    return res.status(HTTP_STATUSES.OK_200).send(posts)
+})
+// Get post by id
 postsRouter.get('/:id', async (req: RequestWithParams<PostIdType>, res: Response<ViewPostType>) => {
-        const id = req.params.id
-        if(!ObjectId.isValid(id))
-        {
-            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-            return;
-        }
-
-        const post = await PostService.getPostById(id)
-        if (!post) {
-            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-        } else {
-            res.send(post)
-        }
-    })
-
+    const id = req.params.id
+    if(!ObjectId.isValid(id))
+    {
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return;
+    }
+    const post = await PostService.getPostById(id)
+    if (!post) {
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    } else {
+        res.status(HTTP_STATUSES.OK_200).send(post)
+    }
+})
+// Create post
 postsRouter.post('/',authMiddleware, postValidation(), async (req: RequestWithBody<CreatePostType>, res: ResponseType<OutputPostType>) => {
-
-
-        const createData = {
-            title:req.body.title,
-            shortDescription:req.body.shortDescription,
-            content:req.body.content,
-            blogId:req.body.blogId,
-            blogName:req.body.blogName
-        }
-        const createdPost = await PostService.createPost(createData)
-
+    const createdPost = await PostService.createPost({...req.body})
     if(!createdPost) {
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
         return
     }
-
-    res.status(HTTP_STATUSES.CREATED_201).send(createdPost)
-
-    })
-
+    return res.status(HTTP_STATUSES.CREATED_201).send(createdPost)
+})
+// Update post by id
 postsRouter.put('/:id', authMiddleware, postValidation(), async (req: RequestWithParamsAndBody<PostIdType, UpdatePostType>, res: Response) => {
-        const id = req.params.id
-        if(!ObjectId.isValid(id)){
-            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-            return
-        }
-        const updateData = {
-            title:req.body.title,
-            shortDescription:req.body.shortDescription,
-            content:req.body.content,
-            blogId:req.body.blogId,
-            blogName:req.body.blogName
-        }
-        const postIsUpdated = await PostService.updatePost(id, updateData)
+    const id = req.params.id
+    if(!ObjectId.isValid(id)){
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return
+    }
+    const postIsUpdated = await PostService.updatePost(id, {...req.body})
     if(!postIsUpdated) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return
     }
-    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-    })
-
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+})
+// Delete post by id
 postsRouter.delete('/:id',authMiddleware, async (req: RequestWithParams<PostIdType>, res: Response) => {
-        const id = req.params.id
-        if(!ObjectId.isValid(id)){
-            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-            return
-        }
-        const postIsDeleted = await PostService.deletedPost(id)
-        if (!postIsDeleted) {
-            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-            return
-        }
-        res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+    const id = req.params.id
+    if(!ObjectId.isValid(id)){
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return
+    }
+    const postIsDeleted = await PostService.deletedPost(id)
+    if (!postIsDeleted) {
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return
+    }
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })

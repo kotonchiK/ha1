@@ -5,7 +5,6 @@ import {postsRouter} from "./routers/posts.router";
 import {testRouter} from "./test/test-router";
 import {usersRouter} from "./routers/users.router";
 import {authRouter} from "./routers/auth.router";
-
 export const app = express()
 export const jsonBodyMiddleWare = express.json()
 

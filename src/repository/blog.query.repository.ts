@@ -1,21 +1,24 @@
-import {CreateBlogType, OutputBlogType, UpdateBlogType, ViewBlogType} from "../models/blogs.models";
 import {blogsCollection} from "../db/db";
 import {blogMapper} from "../mappers/blog.mapper";
-import {Filter, ObjectId, SortDirection} from "mongodb";
+import {ObjectId, SortDirection} from "mongodb";
 import {Pagination} from "../types";
-import {OutputPostType} from "../models/posts.models";
-
-export type SortData = {
-    searchNameTerm:string | null
-    sortBy: string
+import {OutputBlogType} from "../models/blogs.output.models";
+type SortData = {
+    searchNameTerm:string
+    sortBy?:string | undefined
     sortDirection:SortDirection
-    pageNumber:number
-    pageSize:number
+    pageNumber?:number | undefined
+    pageSize?:number | undefined
 }
-
 export class BlogQueryRepository {
-
-    static async getAll(sortData: SortData): Promise<Pagination<OutputBlogType>> {
+    static async getAll(reqQuery: SortData): Promise<Pagination<OutputBlogType>> {
+        const sortData = {
+            searchNameTerm:reqQuery.searchNameTerm ?? null,
+            sortBy: reqQuery.sortBy ?? "createdAt",
+            sortDirection:reqQuery.sortDirection ?? "desc",
+            pageNumber:reqQuery.pageNumber ? +reqQuery.pageNumber : 1,
+            pageSize:reqQuery.pageSize ? +reqQuery.pageSize : 10
+        }
 
         const {searchNameTerm, sortBy, sortDirection, pageNumber, pageSize} = sortData
 
@@ -38,7 +41,6 @@ export class BlogQueryRepository {
             .toArray()
 
         const totalCount = await blogsCollection.countDocuments(filter)
-
         const pagesCount = Math.ceil(totalCount/pageSize)
 
         return {
@@ -49,14 +51,11 @@ export class BlogQueryRepository {
             items: blogs.map(blogMapper)
         }
     }
-
     static async getById(id: string):Promise<OutputBlogType | null> {
         const blog = await blogsCollection.findOne({_id: new ObjectId(id)})
-
         if(!blog) {
             return null
         }
-
         return blogMapper(blog)
     }
 }

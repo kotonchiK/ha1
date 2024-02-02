@@ -1,4 +1,4 @@
-import {Router, Response, Request} from "express";
+import {Router, Response} from "express";
 import {authMiddleware} from "../middlewares/auth/auth.middleware";
 import {blogValidation} from "../middlewares/validators/blog.validator";
 import {
@@ -10,43 +10,29 @@ import {
     ResponseType
 } from "../types";
 import {BlogRepository} from "../repository/blog.repository";
+import {ObjectId} from "mongodb";
+import {HTTP_STATUSES} from "../utils";
+import {BlogQueryRepository} from "../repository/blog.query.repository";
+import {createPostFromBlogValidation} from "../middlewares/validators/post.validator";
+import {PostQueryRepository} from "../repository/post.query.repository";
+import {BlogService} from "../services/blog.service";
 import {
     BlogIdType,
     CreateBlogType,
     CreatePostFromBlogType,
-    OutputBlogType,
-    UpdateBlogType,
-    ViewBlogType
-} from "../models/blogs.models";
-import {ObjectId} from "mongodb";
-import {HTTP_STATUSES} from "../utils";
-import {QueryBlogInputModel} from "../models/query.blog.input.model";
-import {BlogQueryRepository} from "../repository/blog.query.repository";
-import {createPostFromBlogValidation} from "../middlewares/validators/post.validator";
-import {PostDb} from "../db/types/posts.types";
-import {PostRepository} from "../repository/post.repository";
-import {PostQueryRepository} from "../repository/post.query.repository";
-import {OutputPostType} from "../models/posts.models";
-import {BlogService} from "../services/blog.service";
-import {PostService} from "../services/post.service";
-import {QueryPostInputModel} from "../models/query.post.input.model";
-
+    QueryBlogInputModel,
+    UpdateBlogType
+} from "../models/blogs.input.models";
+import {OutputBlogType, ViewBlogType} from "../models/blogs.output.models";
+import {QueryPostInputModel} from "../models/posts.input.models";
+import {OutputPostType} from "../models/posts.output.models";
 export const blogsRouter = Router({})
-
+// Get all blogs
 blogsRouter.get('/', async (req: RequestWithQuery<QueryBlogInputModel>, res: ResponseType<Pagination<OutputBlogType>>) =>{
-
-    const sortData = {
-        searchNameTerm:req.query.searchNameTerm ?? null,
-        sortBy: req.query.sortBy ?? "createdAt",
-        sortDirection:req.query.sortDirection ?? "desc",
-        pageNumber:req.query.pageNumber ? +req.query.pageNumber : 1,
-        pageSize:req.query.pageSize ? +req.query.pageSize : 10
-    }
-
-        const blogs = await BlogQueryRepository.getAll(sortData)
-        res.send(blogs)
+        const blogs = await BlogQueryRepository.getAll({...req.query})
+       return res.status(HTTP_STATUSES.OK_200).send(blogs)
     })
-
+// Get blog by id
 blogsRouter.get('/:id', async (req: RequestWithParams<BlogIdType>, res: Response<ViewBlogType>) => {
         const id = req.params.id
 
@@ -58,127 +44,78 @@ blogsRouter.get('/:id', async (req: RequestWithParams<BlogIdType>, res: Response
         if (!blog) {
             res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
             return
-        } else {
-            res.send(blog)
         }
+        return res.status(HTTP_STATUSES.OK_200).send(blog)
     })
-
+// Get posts by blog with id
 blogsRouter.get('/:id/posts', async (req: RequestWithParamsAndQuery<BlogIdType,QueryPostInputModel>, res: ResponseType<Pagination<OutputPostType> | null>) =>{
-
-    const blogId = req.params.id
+    const blogId:string = req.params.id
     if(!ObjectId.isValid(blogId))
     {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return
     }
-
     const blog = await BlogRepository.getById(blogId)
-
     if(!blog) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return
     }
-
-    const sortData = {
-        sortBy: req.query.sortBy ?? "createdAt",
-        sortDirection:req.query.sortDirection ?? "desc",
-        pageNumber:req.query.pageNumber ? +req.query.pageNumber : 1,
-        pageSize:req.query.pageSize ? +req.query.pageSize : 10,
-    }
-    const posts = await PostQueryRepository.getByIdSort(blogId, sortData)
+    const posts = await PostQueryRepository.getByIdSort(blogId, {...req.query})
     if(!posts){
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return
     }
-
-    res.status(HTTP_STATUSES.OK_200).send(posts)
+    return res.status(HTTP_STATUSES.OK_200).send(posts)
 })
-
+// Create blog
 blogsRouter.post('/', authMiddleware, blogValidation(), async (req: RequestWithBody<CreateBlogType>, res: ResponseType<OutputBlogType>) => {
-
-        const {name, description, websiteUrl} = req.body
-
-        const newBlog = {
-            name,
-            websiteUrl,
-            description,
-            isMembership:false,
-            createdAt: new Date().toISOString()
-        }
-        const createdBlog = await BlogService.createBlog(newBlog)
-
+    const createdBlog = await BlogService.createBlog({...req.body})
     if(!createdBlog) {
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
         return
     }
-    res.status(HTTP_STATUSES.CREATED_201).send(createdBlog)
-
+    return res.status(HTTP_STATUSES.CREATED_201).send(createdBlog)
     })
-
+// Create post by BlogId
 blogsRouter.post('/:id/posts', authMiddleware, createPostFromBlogValidation(), async (req: RequestWithParamsAndBody<ParamType ,CreatePostFromBlogType>, res: ResponseType<OutputPostType>) => {
     const id = req.params.id
     if (!ObjectId.isValid(id)) {
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
         return
     }
-    const createPostFromBlogModel = {
-        title:req.body.title,
-        shortDescription:req.body.shortDescription,
-        content:req.body.content
-    }
-    const post = await BlogService.createPostToBlog(id, createPostFromBlogModel)
-
+    const post = await BlogService.createPostToBlog(id, {...req.body})
     if(!post){
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return
     }
-
-    res.status(HTTP_STATUSES.CREATED_201).send(post)
-
-
+    return res.status(HTTP_STATUSES.CREATED_201).send(post)
 })
-
+// Update blog by id
 blogsRouter.put('/:id', authMiddleware, blogValidation(), async (req: RequestWithParamsAndBody<BlogIdType, UpdateBlogType>, res: Response) => {
-
-        const id = req.params.id
-
-        if(!ObjectId.isValid(id)) {
+    const id = req.params.id
+    if(!ObjectId.isValid(id)) {
             res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
             return
         }
-
-        const updateData = {
-            name:req.body.name,
-            description:req.body.description,
-            websiteUrl:req.body.websiteUrl
-        }
-
-        const blogIsUpdated = await BlogService.updateBlog(id, updateData)
+    const blogIsUpdated = await BlogService.updateBlog(id, {...req.body})
     if(!blogIsUpdated) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return
     }
-
-    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-
-    })
-
+   return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+})
+// Delete blog by id
 blogsRouter.delete('/:id', authMiddleware, async (req: RequestWithParams<BlogIdType>, res: Response) => {
-
-        const id = req.params.id
-
-        if(!ObjectId.isValid(id))
-        {
-            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-            return
-        }
-
-        const blogIsDeleted = await BlogService.deleteBlog(id)
-
+    const id = req.params.id
+    if(!ObjectId.isValid(id))
+    {
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+        return
+    }
+    const blogIsDeleted = await BlogService.deleteBlog(id)
     if(!blogIsDeleted) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return
     }
-
-    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-    })
+    return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
+})
