@@ -25,8 +25,3 @@ export type QueryPostInputModel = {
     pageNumber?:number
     pageSize?:number
 }
-
-// {"title":"string",
-//     "shortDescription":"string",
-//     "content":"string",
-//     "blogId":"string"}

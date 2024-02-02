@@ -73,12 +73,3 @@ postsRouter.delete('/:id',authMiddleware, async (req: RequestWithParams<PostIdTy
     }
     return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })
-
-// postsRouter.post('/',authMiddleware, postValidation(), async (req: RequestWithBody<CreatePostType>, res: ResponseType<OutputPostType>) => {
-//     const createdPost = await PostService.ccreatePost({...req.body})
-//     if(!createdPost) {
-//         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
-//         return
-//     }
-//     return res.status(HTTP_STATUSES.CREATED_201).send(createdPost)
-// })
