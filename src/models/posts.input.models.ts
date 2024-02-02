@@ -9,7 +9,6 @@ export type CreatePostType = {
     shortDescription:string
     content:string
     blogId:string
-    blogName:string
 }
 
 export type UpdatePostType = {
@@ -26,3 +25,8 @@ export type QueryPostInputModel = {
     pageNumber?:number
     pageSize?:number
 }
+
+// {"title":"string",
+//     "shortDescription":"string",
+//     "content":"string",
+//     "blogId":"string"}

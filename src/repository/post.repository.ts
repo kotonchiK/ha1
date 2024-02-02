@@ -3,6 +3,8 @@ import {postMapper} from "../mappers/post.mapper";
 import {ObjectId} from "mongodb";
 import {OutputPostType} from "../models/posts.output.models";
 import {CreatePostType, UpdatePostType} from "../models/posts.input.models";
+import {PostQueryRepository} from "./post.query.repository";
+import {BlogRepository} from "./blog.repository";
 export class PostRepository {
     static async getById(id: string):Promise<OutputPostType | null> {
         const post = await postsCollection.findOne({_id: new ObjectId(id)})
@@ -12,8 +14,10 @@ export class PostRepository {
         return postMapper(post)
     }
     static async createPost(createData: CreatePostType):Promise<string | null > {
+        const blog = await BlogRepository.getById(createData.blogId)
         const newPost = {
             ...createData,
+            blogName: blog!.name,
             createdAt: new Date().toISOString()
         }
         const post = await postsCollection.insertOne(newPost)
@@ -35,4 +39,17 @@ export class PostRepository {
 
         return !!foundPost.deletedCount
     }
+    // static async ccreatePost(createData: CreatePostType):Promise<string | null > {
+    //     const blog = await BlogRepository.getById(createData.blogId)
+    //     const newPost = {
+    //         ...createData,
+    //         blogName: blog!.name,
+    //         createdAt: new Date().toISOString()
+    //     }
+    //     const post = await postsCollection.insertOne(newPost)
+    //
+    //     return post.insertedId.toString()
+    //
+    // }
+
 }
