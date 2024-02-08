@@ -6,6 +6,13 @@ export type CreateInputUserModel = {
     password:string
 }
 
+export type UserViewModel = {
+    id:string
+    login:string
+    email:string
+    createdAt:string
+}
+
 export type UserIdType = {
     id:string
 }

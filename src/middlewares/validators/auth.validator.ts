@@ -1,4 +1,4 @@
-import {body} from "express-validator";
+import {body, header} from "express-validator";
 import {inputValidationMiddleware} from "../inputValidation/inputValidation.middleware";
 
 //   "/auth/login" - post - Validation
@@ -38,3 +38,9 @@ const passwordValidator = body('password')
     .withMessage('Incorrect password')
 
 export const userValidation = () => [loginValidator,emailValidator, passwordValidator, inputValidationMiddleware]
+
+const contentValidator = body('content')
+    .isString().trim().isLength({min:20, max:300}).withMessage('Incorrect content')
+
+export const contentValidation = () => [userValidation, inputValidationMiddleware]
+

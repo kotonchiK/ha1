@@ -3,6 +3,7 @@ import {MongoClient} from "mongodb";
 import {BlogDb} from "./types/blogs.types";
 import {PostDb} from "./types/posts.types";
 import {UserDb} from "./types/user.types";
+import {CommentsDb} from "./types/comments.types";
 dotenv.config()
 export const port = 80
 
@@ -13,6 +14,7 @@ export const database = client.db('blogs-db')
 export const blogsCollection = database.collection<BlogDb>('blogs')
 export const postsCollection = database.collection<PostDb>('posts')
 export const usersCollection = database.collection<UserDb>('users')
+export const commentsCollection = database.collection<CommentsDb>('comments')
 export const runDb = async () => {
     try{
         await client.connect()
