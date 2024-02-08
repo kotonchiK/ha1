@@ -31,7 +31,7 @@ commentRouter.get('/:id', async (req:RequestWithParams<CommentIdType>,res:Respon
     }
 })
 
-commentRouter.delete('/:commentId'), tokenMiddleware,
+commentRouter.delete('/:id', tokenMiddleware,
     async (req:RequestWithParamsAndBody<CommentIdType, InputCommentModel>, res:Response) => {
     const commentId = req.params.id
     if(!ObjectId.isValid(commentId)){
@@ -46,9 +46,9 @@ commentRouter.delete('/:commentId'), tokenMiddleware,
             return res.sendStatus(HTTP_STATUSES.NOT_OWNER_403)
         }
         return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-}
+})
 
-commentRouter.put('/:commentId'), tokenMiddleware, contentValidation(),
+commentRouter.put('/:id', tokenMiddleware, contentValidation(),
     // content validation
     async (req: RequestWithParamsAndBody<CommentIdType, UpdateCommentModel>, res:Response) => {
         const commentId = req.params.id
@@ -70,4 +70,4 @@ commentRouter.put('/:commentId'), tokenMiddleware, contentValidation(),
             return res.sendStatus(HTTP_STATUSES.NOT_OWNER_403)
         }
         return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
-}
+})

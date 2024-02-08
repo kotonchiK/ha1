@@ -6,13 +6,7 @@ import {UserViewModel} from "../models/users.input.models";
 
 export const jwtService = {
     async createJWT (user: UserViewModel ) {
-        const token = jwt.sign({userId:user.id}, settings.JWT_SECRET, {expiresIn:'100h'})
-        return token
-        // { resultCode:0,
-        //     data:{
-        //         token:token
-        //     }
-        // }
+         return jwt.sign({userId:user.id}, settings.JWT_SECRET, {expiresIn:'100h'})
     },
     async getUserIdByToken(token:string):Promise<ObjectId | null> {
         try{
@@ -22,6 +16,4 @@ export const jwtService = {
             return null
         }
     }
-
-
 }
