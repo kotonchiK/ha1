@@ -62,7 +62,7 @@ postsRouter.get('/:id/comments', async (req: RequestWithParamsAndQuery<PostIdTyp
     return res.status(HTTP_STATUSES.OK_200).send(comments)
 })
 
-// Create post
+// Create post/////
 postsRouter.post('/',authMiddleware, postValidation(), async (req: RequestWithBody<CreatePostType>, res: ResponseType<OutputPostType>) => {
     const createdPost = await PostService.createPost({...req.body})
     if(!createdPost) {

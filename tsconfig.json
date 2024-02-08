@@ -13,5 +13,5 @@
   "include": ["src/**/*"],
   "exclude": ["node_modules", "**/*.test.ts"],
 //tsconfig.json
-  "files": ["index.d.ts"]
+  "files": ["src/types/index.d.ts"]
 }
