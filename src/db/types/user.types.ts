@@ -4,4 +4,3 @@ export type UserDb = {
     password:string
     createdAt:string
 }
-

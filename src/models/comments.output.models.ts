@@ -1,11 +1,9 @@
 export type CommentsOutputModels = {
     id: string,
     content: string,
-    commentatorInfo: commentatorInfo
+    commentatorInfo: {
+        userId:string,
+        userLogin: string
+    },
     createdAt: string
-}
-
-export type commentatorInfo = {
-    userId:string
-    userLogin:string
 }

@@ -11,7 +11,6 @@ import {ObjectId} from "mongodb";
 import {HTTP_STATUSES} from "../utils";
 import {CommentService} from "../services/comment.service";
 import {tokenMiddleware} from "../middlewares/auth/auth.bearer.middleware";
-import {ViewUserType} from "../models/users.output.models";
 import {contentValidation} from "../middlewares/validators/auth.validator";
 
 export const commentRouter = Router({})
@@ -43,7 +42,7 @@ commentRouter.delete('/:commentId', tokenMiddleware,
             return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         }
         if(isCommentDeleted === 403) {
-            return res.sendStatus(HTTP_STATUSES.NOT_OWNER_403)
+            return res.sendStatus(403)
         }
         return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })
@@ -67,7 +66,7 @@ commentRouter.put('/:commentId', tokenMiddleware, contentValidation(),
             return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         }
         if(isCommentUpdated === 403){
-            return res.sendStatus(HTTP_STATUSES.NOT_OWNER_403)
+            return res.sendStatus(403)
         }
         return res.sendStatus(HTTP_STATUSES.NO_CONTENT_204)
 })

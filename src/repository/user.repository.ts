@@ -26,11 +26,11 @@ export class UserRepository {
         }
         return null
     }
-    static async createUser(createUser:UserDb):Promise<string | null> {
+    static async createUser(createUser: UserDb):Promise<string | null> {
         const user = await usersCollection.insertOne(createUser)
         return user.insertedId.toString()
     }
-    static async deleteById(id: string):Promise<boolean | null> {
+    static async deleteById(id: string): Promise<boolean | null> {
         const deletedUser = await usersCollection.deleteOne({_id: new ObjectId(id)})
         if (!deletedUser) {
             return null
