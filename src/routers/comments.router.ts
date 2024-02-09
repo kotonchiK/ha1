@@ -32,13 +32,13 @@ commentRouter.get('/:id', async (req:RequestWithParams<CommentIdType>,res:Respon
 })
 
 commentRouter.delete('/:id', tokenMiddleware,
-    async (req:RequestWithParamsAndBody<CommentIdType, InputCommentModel>, res:Response) => {
+    async (req:RequestWithParamsAndBody<CommentIdType, CommentIdType>, res:Response) => {
     const commentId = req.params.id
     if(!ObjectId.isValid(commentId)){
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         return
     }
-    const isCommentDeleted = await CommentService.deleteComment(commentId, req.body)
+    const isCommentDeleted = await CommentService.deleteComment(commentId, req.body.id)
         if(isCommentDeleted === 404) {
             return res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
         }
@@ -57,7 +57,7 @@ commentRouter.put('/:id', tokenMiddleware, contentValidation(),
             return
         }
         const updateData = {
-            id:req.body.userId,
+            userId:req.body.userId,
             content:req.body.content
         }
 

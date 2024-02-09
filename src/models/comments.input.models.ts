@@ -3,13 +3,11 @@ export type CommentIdType = {
 }
 
 export type CommentUpdateType = {
-    id:string
+    userId:string
     content:string
 }
 
 export type UpdateCommentModel = {
-    login:string
-    email:string
     userId:string
     content:string
 }
