@@ -15,8 +15,18 @@ app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
 app.use('/testing/all-data', testRouter)
 app.use('/users',usersRouter)
-app.use('/auth/login', authRouter)
+app.use('/auth', authRouter)
 
 app.listen(port, async () => {
     await runDb()
 })
+
+// /** @type {import('ts-jest').JestConfigWithTsJest} */
+// module.exports = {
+//     preset: 'ts-jest',
+//     testEnvironment: 'node',
+//     testMatch: ['**/__tests__/**/*.ts?(x)', '**/?(*.)+(spec|test).ts?(x)'],
+//     testTimeout: 100000,
+// };
+
+// "test:e2e": "jest --config jest-e2e.json --runInBand --detectOpenHandles --forceExit",
