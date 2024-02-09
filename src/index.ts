@@ -15,9 +15,13 @@ app.use('/posts', postsRouter)
 app.use('/testing/all-data', testRouter)
 app.use('/users',usersRouter)
 
-app.listen(port, async () => {
+export const startApp =  async () => {
     await runDb()
-})
+    app.listen(port, () => {
+        console.log(`app started on ${port} port`)
+    })
+}
+startApp()
 
 // /** @type {import('ts-jest').JestConfigWithTsJest} */
 // module.exports = {
