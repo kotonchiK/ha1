@@ -2,7 +2,7 @@ import {loginValidation} from "../middlewares/validators/auth.validator";
 import {RequestWithBody, ResponseType} from "../types";
 import {LoginOrEmailModel} from "../models/users.input.models";
 import {HTTP_STATUSES} from "../utils";
-import {Router} from "express";
+import {Router, Response} from "express";
 import {UserRepository} from "../repository/user.repository";
 import {jwtService} from "../application/jwt-service";
 import {authMiddleware} from "../middlewares/auth/auth.middleware";
@@ -13,11 +13,11 @@ import {UserDb} from "../db/types/user.types";
 import {ViewUserType} from "../models/users.output.models";
 export const authRouter = Router({})
 // Login user to the system
-authRouter.post('/login', loginValidation(), async (req:RequestWithBody<LoginOrEmailModel>, res:ResponseType<string>) => {
+authRouter.post('/login', loginValidation(), async (req:RequestWithBody<LoginOrEmailModel>, res:Response) => {
     const user = await UserRepository.getByLoginOrEmail({...req.body})
     if(user) {
         const accessToken = await jwtService.createJWT(user)
-        res.status(HTTP_STATUSES.OK_200).send(accessToken)
+        res.status(HTTP_STATUSES.OK_200).send({accessToken})
         return
     }
     return res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
