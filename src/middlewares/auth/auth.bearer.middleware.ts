@@ -9,17 +9,16 @@ export const tokenMiddleware = async (req:Request, res:Response, next:NextFuncti
     const token = req.headers.authorization.split(' ')[1]
 
     const userId = await jwtService.getUserIdByToken(token)
-    if(!userId){
-        res.sendStatus(401)
-        return
+    if(userId){
+        const user = await UserQueryRepository.getUserById(userId)
+        req.body = {
+            userId:user!.id,
+            login:user!.login,
+            email:user!.email
+        }
+        return next()
     }
-    const user = await UserQueryRepository.getUserById(userId)
-    req.body = {
-        userId:user!.id,
-        login:user!.login,
-        email:user!.email
-    }
-    next()
+    res.sendStatus(401)
 }
 
 const authMiddleware = async (req:Request, res:Response, next:NextFunction) => {
