@@ -19,6 +19,7 @@ export const runDb = async () => {
     try{
         await client.connect()
 
+        console.log(uri)
         console.log('Client connected to DB')
         console.log(`Example app listening on port ${port}`)
     } catch (e) {
