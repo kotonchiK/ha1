@@ -14,7 +14,11 @@ export const tokenMiddleware = async (req:Request, res:Response, next:NextFuncti
         return
     }
     const user = await UserQueryRepository.getUserById(userId)
-    req.body = user
+    req.body = {
+        userId:user!.id,
+        login:user!.login,
+        email:user!.email
+    }
     next()
 }
 
