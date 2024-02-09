@@ -23,6 +23,7 @@ authRouter.post('/login', loginValidation(), async (req:RequestWithBody<LoginOrE
     return res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401)
 })
 
+//
 authRouter.get('/me', tokenMiddleware, async (req:RequestWithBody<ViewUserType>, res) => {
     const user = {
         email:req.body.email,
