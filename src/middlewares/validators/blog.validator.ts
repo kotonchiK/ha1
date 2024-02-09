@@ -1,4 +1,4 @@
-import {body} from "express-validator";
+  import {body} from "express-validator";
 import {inputValidationMiddleware} from "../inputValidation/inputValidation.middleware";
 
 // /blog - post, put/:id - Validation

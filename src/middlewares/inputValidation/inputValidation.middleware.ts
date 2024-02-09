@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response} from "express";
+  import {NextFunction, Request, Response} from "express";
 import {ValidationError, validationResult} from "express-validator";
 import {HTTP_STATUSES} from "../../utils";
 export const inputValidationMiddleware = async (req:Request, res:Response, next:NextFunction) => {

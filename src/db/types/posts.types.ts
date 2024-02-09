@@ -1,4 +1,4 @@
-export type PostDb = {
+export type  PostDb = {
     title:string
     shortDescription:string
     content:string

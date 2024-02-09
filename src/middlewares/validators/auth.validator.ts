@@ -37,4 +37,4 @@ const passwordValidator = body('password')
     .isLength({min:6, max:20})
     .withMessage('Incorrect password')
 
-export const userValidation = () => [loginValidator,emailValidator, passwordValidator, inputValidationMiddleware]
+export const userValidation =   () => [loginValidator,emailValidator, passwordValidator, inputValidationMiddleware]

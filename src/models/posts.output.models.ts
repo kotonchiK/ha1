@@ -1,4 +1,4 @@
-export type ViewPostType = {
+  export type ViewPostType = {
     id:string
     title:string
     shortDescription:string

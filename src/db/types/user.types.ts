@@ -1,4 +1,4 @@
-export type UserDb = {
+export type   UserDb = {
     login:string
     email:string
     password:string

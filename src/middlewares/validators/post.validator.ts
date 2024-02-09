@@ -33,7 +33,7 @@ const blogIdValidator = body('blogId')
 })
     .withMessage('Incorrect blogId')
 
-export const postValidation = () => [titleValidator, shortDescriptionValidator, contentValidator, blogIdValidator, inputValidationMiddleware]
+export const   postValidation = () => [titleValidator, shortDescriptionValidator, contentValidator, blogIdValidator, inputValidationMiddleware]
 
 // /blogs - post/:id/posts - Validation
 

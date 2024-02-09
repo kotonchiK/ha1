@@ -1,4 +1,4 @@
-import {blogsCollection} from "../db/db";
+  import {blogsCollection} from "../db/db";
 import {blogMapper} from "../mappers/blog.mapper";
 import {ObjectId, SortDirection} from "mongodb";
 import {Pagination} from "../types";
