@@ -21,6 +21,22 @@ export class PostService {
         }
         return post
     }
+    // static async ccreatePost(createData: CreatePostType): Promise<OutputPostType | null> {
+    //
+    //     const createdPostId = await PostRepository.ccreatePost(createData)
+    //
+    //     if (!createdPostId) {
+    //         return null
+    //     }
+    //     const post = await PostQueryRepository.getById(createdPostId)
+    //
+    //     if (!post) {
+    //         return null
+    //     }
+    //
+    //     return post
+    // }
+
     static async getPostToBlog(blogId:string):Promise<FindCursor<WithId<PostDb>> | null> {
         const blog = await BlogQueryRepository.getById(blogId)
         if(!blog) {
