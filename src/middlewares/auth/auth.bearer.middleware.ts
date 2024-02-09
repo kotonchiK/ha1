@@ -18,7 +18,7 @@ export const tokenMiddleware = async (req:Request, res:Response, next:NextFuncti
         res.sendStatus(401)
         return
     }
-    req.userId = user!.id
+    req.body.userId = user!.id
     next()
 }
 
@@ -50,4 +50,3 @@ const authMiddleware = async (req:Request, res:Response, next:NextFunction) => {
     }
     return res.sendStatus(401)
 }
-
