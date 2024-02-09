@@ -29,5 +29,6 @@ export class UsersService {
         return await UserRepository.deleteById(userId)
     }
 
+
     static async _generateHash(str:string, salt:string) {return bcrypt.hash(str, salt)}
 }

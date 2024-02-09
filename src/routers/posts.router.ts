@@ -5,7 +5,7 @@ import {
     Pagination,
     RequestWithBody,
     RequestWithParams,
-    RequestWithParamsAndBody,
+    RequestWithParamsAndBody, RequestWithParamsAndQuery,
     RequestWithQuery,
     ResponseType
 } from "../types";
@@ -15,6 +15,7 @@ import {PostQueryRepository} from "../repository/post.query.repository";
 import {PostService} from "../services/post.service";
 import {CreatePostType, PostIdType, QueryPostInputModel, UpdatePostType} from "../models/posts.input.models";
 import {OutputPostType, ViewPostType} from "../models/posts.output.models";
+
 export const postsRouter = Router({})
 // Get posts with Pagination
 postsRouter.get('/', async (req: RequestWithQuery<QueryPostInputModel>, res: ResponseType<Pagination<OutputPostType>>) => {
@@ -36,6 +37,8 @@ postsRouter.get('/:id', async (req: RequestWithParams<PostIdType>, res: Response
         res.status(HTTP_STATUSES.OK_200).send(post)
     }
 })
+
+
 // Create post
 postsRouter.post('/',authMiddleware, postValidation(), async (req: RequestWithBody<CreatePostType>, res: ResponseType<OutputPostType>) => {
     const createdPost = await PostService.createPost({...req.body})
@@ -45,6 +48,8 @@ postsRouter.post('/',authMiddleware, postValidation(), async (req: RequestWithBo
     }
     return res.status(HTTP_STATUSES.CREATED_201).send(createdPost)
 })
+
+
 // Update post by id
 postsRouter.put('/:id', authMiddleware, postValidation(), async (req: RequestWithParamsAndBody<PostIdType, UpdatePostType>, res: Response) => {
     const id = req.params.id

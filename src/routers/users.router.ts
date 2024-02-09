@@ -7,7 +7,6 @@ import {authMiddleware} from "../middlewares/auth/auth.middleware";
 import {ObjectId} from "mongodb";
 import {HTTP_STATUSES} from "../utils";
 import {UsersService} from "../services/users.service";
-import {userValidation} from "../middlewares/validators/auth.validator";
 export const usersRouter = Router({})
 // Get users
 usersRouter.get('/', async (req: RequestWithQuery<QueryUserInputModel>, res:Response) => {
@@ -15,7 +14,7 @@ usersRouter.get('/', async (req: RequestWithQuery<QueryUserInputModel>, res:Resp
     return res.status(HTTP_STATUSES.OK_200).send(users)
 })
 // Create user
-usersRouter.post('/', authMiddleware, userValidation(), async (req:RequestWithBody<CreateInputUserModel>, res:ResponseType<OutputUserType>) => {
+usersRouter.post('/', authMiddleware, async (req:RequestWithBody<CreateInputUserModel>, res:ResponseType<OutputUserType>) => {
     const createUser = await UsersService.createUser({...req.body})
     if(!createUser) {
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
