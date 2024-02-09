@@ -35,12 +35,12 @@ export class CommentService {
         return await CommentQueryRepository.getById(id)
     }
 
-    static async deleteComment(commentId:string, userId: string) {
+    static async deleteComment(commentId:string, user: InputCommentModel) {
         const comment = await CommentQueryRepository.getById(commentId)
         if(!comment) {
             return 404
         }
-        if(userId !== comment.commentatorInfo.userId)
+        if(user.userId !== comment.commentatorInfo.userId)
         {
             return 403
         }
@@ -52,7 +52,7 @@ export class CommentService {
         if(!comment) {
             return 404
         }
-        if(user.userId !== comment.commentatorInfo.userId){
+        if(user.id !== comment.commentatorInfo.userId){
             return 403
         }
         return await CommentRepository.updateCommentById(commentId, user.content)
