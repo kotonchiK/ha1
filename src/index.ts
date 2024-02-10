@@ -17,7 +17,7 @@ app.use('/users',usersRouter)
 
 export const startApp =  async () => {
     await runDb()
-    app.listen(port, () => {
+    app.listen(process.env.PORT || port, () => {
         console.log(`app started on ${port} port`)
     })
 }
