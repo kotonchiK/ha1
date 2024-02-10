@@ -21,6 +21,7 @@ export const startApp =  async () => {
         console.log(`app started on ${port} port`)
     })
 }
+/////
 startApp()
 
 // /** @type {import('ts-jest').JestConfigWithTsJest} */
