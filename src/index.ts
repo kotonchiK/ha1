@@ -1,4 +1,4 @@
-import {port, runDb} from "./db/db";
+import {runDb} from "./db/db";
 import express from "express";
 import {blogsRouter} from "./routers/blogs.router";
 import {postsRouter} from "./routers/posts.router";
@@ -17,8 +17,8 @@ app.use('/users',usersRouter)
 
 export const startApp =  async () => {
     await runDb()
-    app.listen(process.env.PORT || port, () => {
-        console.log(`app started on ${port} port`)
+    app.listen(process.env.PORT, () => {
+        console.log(`app started on ${process.env.PORT} port`)
     })
 }
 /////

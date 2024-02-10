@@ -5,7 +5,6 @@ import {PostDb} from "./types/posts.types";
 import {UserDb} from "./types/user.types";
 import {CommentsDb} from "./types/comments.types";
 dotenv.config()
-export const port = 80
 
 const uri = process.env.MONGO_URL || "mongodb://localhost:27017"
 
@@ -21,7 +20,7 @@ export const runDb = async () => {
 
         console.log(uri)
         console.log('Client connected to DB')
-        console.log(`Example app listening on port ${port}`)
+        console.log(`Example app listening on port ${process.env.PORT}`)
     } catch (e) {
         console.log(e)
 
